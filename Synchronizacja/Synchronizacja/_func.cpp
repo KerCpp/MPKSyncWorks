@@ -7,7 +7,22 @@
 #include "permutacja.h"
 #include <queue>
 #include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <ctime>
 
+//do porownan w sync kolejce
+class GRKnotComp
+{
+	bool reverse;
+public:
+	GRKnotComp(const bool& revparam = false) : reverse(revparam) {}
+	bool operator() (const CStop &lhs, const CStop &rhs) const
+	{
+		if (reverse) return (lhs.numOfLines()>rhs.numOfLines());
+		else return (lhs.numOfLines()<rhs.numOfLines());
+	}
+}KnotComp;
 
 /*
 Funkcja testowa
@@ -49,10 +64,6 @@ std::vector<Cgroup> divideIntoGroups(const CconnectionMatrix &matrix)
 	}
 	return groups;
 }
-
-
-
-
 //tu sie dzieje cala magia(rekurencji)
 CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data, const Cgroup &group, CKnotNet &bestOption, CKnotNet thisOption, int version = 0)
 {
@@ -102,12 +113,6 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 	}
 	return bestOption;
 }
-
-
-
-
-
-
 //sync grupy
 const individual& groupSync(const CconnectionMatrix &data, const Cgroup &group)
 {
@@ -137,4 +142,14 @@ const individual& sync(const CconnectionMatrix &data, const std::vector<Cgroup> 
 		result += groupSync(data, group);
 	}
 	return result;
+}
+//DO POPRAWY funkcja zapisuj¹ca wynik do pliku wynikowego 
+void save(const individual &Arg)
+{
+	std::ofstream resFile;
+	std::string fileName = "./result";
+	//fileName += /*+czas z ctime*/;
+	fileName += ".txt";
+	resFile.open(fileName, std::ios::out, std::ios::trunc);
+	resFile << Arg;
 }

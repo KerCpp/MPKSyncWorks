@@ -138,3 +138,13 @@ int CconnectionMatrix::_PrecStopId(int& id) const
 	}
 	return id;
 }
+//referencja do przystanku
+const CStop& CconnectionMatrix::getStopInfo(int i) const
+{
+	return m_allstops[i];
+}
+//referencja do lini
+const CLine& CconnectionMatrix::getLineInfo(int i) const
+{
+	return m_allLines[i];
+}

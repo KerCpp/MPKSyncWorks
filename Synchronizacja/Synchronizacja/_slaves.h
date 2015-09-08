@@ -2,6 +2,7 @@
 #include <vector>
 #include <set>
 
+
 //klasa do porownan w zbiorze
 struct vecComp
 {
@@ -30,20 +31,9 @@ struct sort2
 	bool operator() (int i, int j) { return (i<j); }
 };
 
-std::set<int> addToSet(std::vector<int>);
-std::set<int> addToSet(std::set<int>);
+//ostatecznie nie uzywane?
+//std::set<int> addToSet(std::vector<int>); 
+//std::set<int> addToSet(std::set<int>);
 
 bool onlyOnceRuleCtrl(const int &id, const std::vector<int> &vect);
 
-//do porownan w sync kolejce
-class GRKnotComp
-{
-	bool reverse;
-public:
-	GRKnotComp(const bool& revparam = false) : reverse(revparam) {}
-	bool operator() (const CStop &lhs, const CStop &rhs) const
-	{
-		if (reverse) return (lhs.numOfLines()>rhs.numOfLines());
-		else return (lhs.numOfLines()<rhs.numOfLines());
-	}
-}KnotComp;

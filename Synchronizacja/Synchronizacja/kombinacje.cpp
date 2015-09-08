@@ -9,7 +9,7 @@ Ccombinations::Ccombinations(const int numOfLines, const int beat, const int max
 	m_possibleDeviations.resize(numOfLines+1);//w ostatniej lini sa odchylki
 	_countDeviations(maxopoznienie);
 	_add(numOfLines, beat, maxopoznienie, minodstep);
-	//DODAWANIE PERMUTACJI Cpermutation<int, _addpermutation> p;
+	_addpermutations();
 }
 //Destruktor
 Ccombinations::~Ccombinations()//sprzatanie
@@ -99,8 +99,23 @@ bool Ccombinations::_beatSizeCtrl(std::vector<int>&v, int beat)
 {
 	return (beat == _beatSize(v)) ? true : false;
 }
-
-void Ccombinations::_addpermutation()
+//dodaje permutacje juz obliczonych kombinacji
+void Ccombinations::_addpermutations()
 {
-
+	auto it = m_setkombi.begin();
+	const size_t size = m_setkombi.size();
+	for (size_t i = 0; i < size; i++)
+	{
+		Cpermutation<int, wyswietl> p((*it), (*it).size(), true);
+		it++;
+		for each (const auto &v in p.retPermTab())
+		{
+			m_setkombi.insert(v);
+		}
+	}
+}
+//zwraca kombinacje
+const SviComb& Ccombinations::retComb()
+{
+	return m_setkombi;
 }

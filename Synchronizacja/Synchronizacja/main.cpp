@@ -9,11 +9,11 @@
 int main(void)
 {
 	//doadac interfejs - zapisywanie i korzystanie ze starych danych
-	std::string file;
-	std::cout << "Podaj nazwe pliku z danymi: ";
-	std::cin >> file;
+	std::string folder;
+	std::cout << "Podaj adres folderu z danymi: ";
+	std::cin >> folder;
 	std::cout << std::endl << "Wczytuje...";
-	CconnectionMatrix data(file);
+	CconnectionMatrix data(folder);
 	std::cout << "100%";
 	std::cout << std::endl << "Przeliczanie wezlow...";
 	data.findKnots();
@@ -22,8 +22,9 @@ int main(void)
 	const std::vector<Cgroup> &groups = divideIntoGroups(data);
 	std::cout << "100%";
 	std::cout << std::endl << "Rozpoczeto synchronizacje...";
-	sync(data, groups);
+	individual ret(sync(data, groups));
 	std::cout << "100%";
+	save(ret);
 	std::cout << std::endl << "Zakonczono, sprawdz plik wynikowy.";
 	std::cout << std::endl << "Nacisnij enter, aby zakonczyc...";
 	std::cin.sync();

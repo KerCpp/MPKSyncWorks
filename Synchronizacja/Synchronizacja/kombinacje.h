@@ -23,7 +23,7 @@ public:
 			std::cout << std::endl;
 		}
 	}
-	SviComb& retComb();
+	const SviComb& retComb();
 private:
 	void _regularDistribution(int, const int&);//wylicza podstawow¹ kombinacjê która bêdzie przekszta³cana
 	bool _spaceCtrl(std::vector<int>&, int);
@@ -31,5 +31,5 @@ private:
 	int _beatSize(std::vector<int> &) const;
 	void _add(int,int,int,int);
 	void _countDeviations(int);
-	void _addpermutation(std::vector<int>,int); 
+	void _addpermutations(); 
 };

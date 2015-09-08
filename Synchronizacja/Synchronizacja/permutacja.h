@@ -57,9 +57,9 @@ class Cpermutation
 	}
 	inline void _directionChange(const int &position){ (m_permutation[position].m_direction == ) ? m_permutation[position].m_direction = right : m_permutation[position].m_direction = left; };
 	inline ullint _factorial(ullint n) { return (n == 1 || n == 0) ? 1 : _factorial(n - 1) * n; }
-
+	
 public:
-	m_permutation(const std::vector<TYPE> &sequence, const int size, bool save = false)
+	Cpermutation(const std::vector<TYPE> &sequence, const int size, bool save = false)
 	{
 		m_permutation.resize(size);
 		_transfer(sequence, size);
@@ -85,7 +85,7 @@ public:
 				save ? m_permutationTab.pushback(m_permutation) : FUNC(m_permutation, size);
 		}
 	}
-	~m_permutation(){};
+	~Cpermutation(){};
 	const std::vector < vector<kint<TYPE> > > & retPermTab() const
 	{
 		return m_permutationTab();

@@ -28,8 +28,8 @@ public:
 	int numOfLines() const;
 	int numOfStops() const;
 	void findKnots();
-	CStop getStopInfo(int) const;//return m_allStops[int];
-	CLine getLineInfo(int) const;
+	const CStop& getStopInfo(int) const;
+	const CLine& getLineInfo(int) const;
 private:
 	void _fillGraph();
 	int _numOfPrecStops(int&) const;
