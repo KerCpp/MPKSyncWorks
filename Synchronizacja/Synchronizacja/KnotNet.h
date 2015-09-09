@@ -1,5 +1,6 @@
 #pragma once
 #include "przystanek.h"
+#include "mpolaczen.h"
 #include <limits>
 class CKnotNet
 {

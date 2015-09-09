@@ -1,7 +1,10 @@
 #include "KnotNet.h"
 
 //konstruktor
-CKnotNet::CKnotNet(){}
+CKnotNet::CKnotNet(const CconnectionMatrix &data)
+{
+
+}
 //destruktor
 CKnotNet::~CKnotNet(){}
 //porownuje rating
