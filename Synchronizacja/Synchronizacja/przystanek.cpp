@@ -1,4 +1,6 @@
 #include "przystanek.h"
+#include "kombinacje.h"
+#include <cmath>
 
 //konstrukytor
 CStop::CStop(){}
@@ -44,4 +46,34 @@ const int CStop::id() const
 {
 	return m_id;
 }
-void nic(){}
+//ocenia wêze³
+int CStop::rating() const
+{
+	int stopRate = INT_MIN;
+	Ccombinations comb(numOfLines(), 12, 0);
+	for each (const auto &c in comb.retComb())
+	{
+		int test = 0 - _cumPowSum(c);
+		//do genetycznego dopisac
+		//dopuszczalne odstepy
+		//warunek rozkladu linii
+		if (stopRate < test)
+			stopRate = test;
+	}
+	return stopRate;
+}
+//liczy sume kwadratow Odchylek
+int CStop::_cumPowSum(const std::vector<int>& comb) const
+{
+	int sum = 0;
+	for (size_t i = 0; i < m_tTable.size(); i++)
+	{
+		auto diff = abs(m_tTable[i] - comb[i]);
+		sum += diff*diff;
+	}
+}
+//przestawia odjazdy niebezpieczna/ mozna zmienic dlugosc wektora przypadkiem
+const std::vector<int>& CStop::setTTable()
+{
+	return m_tTable;
+}

@@ -7,6 +7,7 @@ class CStop
 	bool m_knot = false;
 	bool m_terminus = false;
 	std::vector<int> m_lines = {};
+	std::vector<int> m_tTable = {};
 public:
 	CStop();
 	virtual ~CStop();
@@ -18,5 +19,9 @@ public:
 	void unsetTerminus();
 	const int numOfLines() const;
 	const int id() const;
+	int rating() const;
+	const std::vector<int>& setTTable();
+private:
+	int _cumPowSum(const std::vector<int>&) const;
 };
 

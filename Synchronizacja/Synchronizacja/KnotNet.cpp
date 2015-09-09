@@ -47,10 +47,14 @@ bool CKnotNet::isKnotGood(int id) const
 //funkcja samooceny
 void CKnotNet::_evalFunc()
 {
-
+	m_rating = 0;
+	for each (const auto &stop in m_CStopList)
+	{
+		m_rating+=stop.rating();
+	}
 }
 //zwraca wezel w ktorym mozna sobie grzebac o dnaym id
-const CStop& CKnotNet::retKnot(int) const
+const CStop& CKnotNet::retKnot(int i) const
 {
-
+	return m_CStopList[i];
 }

@@ -150,7 +150,7 @@ void save(const individual &Arg)
 {
 	std::ofstream resFile;
 	std::string fileName = "./result";
-	//fileName += /*+czas z ctime*/;
+	//fileName += /*+czas z ctime*/; DODAæ
 	fileName += ".txt";
 	resFile.open(fileName, std::ios::out, std::ios::trunc);
 	resFile << Arg;

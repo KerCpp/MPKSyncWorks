@@ -3,12 +3,12 @@
 #include <algorithm>
 #include <iostream>
 //Konstruktor
-Ccombinations::Ccombinations(const int numOfLines, const int beat, const int maxopoznienie, const int minodstep)
+Ccombinations::Ccombinations(const int numOfLines, const int beat, const int maxodchyl, int minodstep = 1)
 {
 	_regularDistribution(beat, numOfLines);
-	m_possibleDeviations.resize(numOfLines+1);//w ostatniej lini sa odchylki
-	_countDeviations(maxopoznienie);
-	_add(numOfLines, beat, maxopoznienie, minodstep);
+	m_possibleDeviations.resize(numOfLines + 1);//w ostatniej lini sa odchylki
+	_countDeviations(maxodchyl);
+	_add(numOfLines, beat, maxodchyl, minodstep);
 	_addpermutations();
 }
 //Destruktor
@@ -28,7 +28,7 @@ void Ccombinations::_regularDistribution(int beat, const int &numOfLines)
 		tmp[i]++;
 		(i < numOfLines-1) ? i++ : i = 0;
 	}
-	std::sort(tmp.begin(), tmp.end());
+	std::sort(tmp.begin(), tmp.end());//po co w zasadzie - nie pamietam
 	m_setkombi.insert(tmp);
 }
 //Funkcja liczy dluigosc taktu
