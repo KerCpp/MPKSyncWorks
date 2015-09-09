@@ -8,7 +8,7 @@ class CLine
 public:
 	CLine();
 	~CLine();
-	int lineID(){};
+	const int lineID() const;
 	std::list<int> const& stopsList() const;
 };
 

@@ -5,7 +5,7 @@
 
 struct ls//line start
 {
-	CLine m_id();
+	int m_id();
 	int m_startTime=0;
 };
 //osobnik
@@ -17,7 +17,8 @@ public:
 	individual(const CKnotNet&);
 	individual(const individual&);
 	~individual();
-	void operator+=(const individual&);
-	friend std::ostream& operator<<(const std::ostream& out, const individual& rhs);
+	individual operator+=(const individual&);
+	friend std::ostream& operator<<(std::ostream& out, const individual& rhs);
+	const std::vector<ls>& retGenom() const;
 };
 
