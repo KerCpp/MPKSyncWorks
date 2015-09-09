@@ -4,14 +4,9 @@
 individual::individual() : m_lsVect()
 {}
 //rzutowanie z sieci CknotNet - uproszczenie sieci do startow z petli
-individual::individual(const CKnotNet &Net)
+individual::individual(const CKnotNet &Net, const CconnectionMatrix &data)
 {
-
-}
-//konstruktor kopiuj¹cy 
-individual::individual(const individual& org)
-{
-
+	Net.
 }
 //destruktor
 individual::~individual()

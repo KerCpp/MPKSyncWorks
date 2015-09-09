@@ -79,9 +79,10 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 	{
 		for each  (const auto &p in perm.retPermTab())
 		{
+			bool fin = false;
 			try
 			{
-				tmpOption.fill(c, p);
+				fin = tmpOption.fill(c, p);//fin moze zmienic sie na true
 			}
 			catch (int err_id)
 			{
@@ -96,7 +97,7 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 			}
 			if (tmpOption.isGood())
 			{
-				if (tmpOption.finished())
+				if (fin)
 				{
 					if (bestOption.rating() < tmpOption.rating())
 						bestOption = tmpOption;
@@ -143,6 +144,7 @@ const individual& sync(const CconnectionMatrix &data, const std::vector<Cgroup> 
 	}
 	return result;
 }
+
 //DO POPRAWY funkcja zapisuj¹ca wynik do pliku wynikowego 
 void save(const individual &Arg)
 {
