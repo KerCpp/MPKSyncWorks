@@ -37,3 +37,23 @@ struct sort2
 
 bool onlyOnceRuleCtrl(const int &id, const std::vector<int> &vect);
 
+struct ls//line start
+{
+	int m_id = -1;
+	int m_startTime = -1;
+	ls(int id, int time) : m_id(id), m_startTime(time) {}
+	int& operator[](int i)
+	{
+		if (i == 0)
+			return m_id;
+		else if (i == 1);
+			return m_startTime;
+	}
+};
+
+
+struct CgraphKnot
+{
+	bool m_conj = false;
+	int m_transferTime = 0;
+};

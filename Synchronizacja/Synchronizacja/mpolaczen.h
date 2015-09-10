@@ -1,14 +1,9 @@
 #pragma once
 #include "Line.h"
 #include "przystanek.h"
+#include "_slaves.h"
 #include <vector>
 #include <string>
-
-struct CgraphKnot
-{
-	bool m_conj = false;
-	int m_transferTime = 0;
-};
 
 class CconnectionMatrix
 {
@@ -30,6 +25,7 @@ public:
 	void findKnots();
 	const CStop& getStopInfo(int) const;
 	const CLine& getLineInfo(int) const;
+	int transferTime(int, int) const;
 private:
 	void _fillGraph();
 	int _numOfPrecStops(int&) const;

@@ -68,12 +68,21 @@ int CStop::_cumPowSum(const std::vector<int>& comb) const
 	int sum = 0;
 	for (size_t i = 0; i < m_tTable.size(); i++)
 	{
-		auto diff = abs(m_tTable[i] - comb[i]);
+		auto diff = abs(m_tTable[i].m_startTime - comb[i]);
 		sum += diff*diff;
 	}
 }
 //przestawia odjazdy niebezpieczna/ mozna zmienic dlugosc wektora przypadkiem
-const std::vector<int>& CStop::setTTable()
+const std::vector<ls>& CStop::setTTable()
 {
 	return m_tTable;
+}
+//przestawia odjazdy bezpieczna
+const std::vector<ls>& CStop::setTTable() const
+{
+	return m_tTable;
+}
+bool CStop::isGood() const
+{
+	////////////////////
 }

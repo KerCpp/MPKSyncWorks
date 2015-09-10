@@ -6,7 +6,7 @@ individual::individual() : m_lsVect()
 //rzutowanie z sieci CknotNet - uproszczenie sieci do startow z petli
 individual::individual(const CKnotNet &Net, const CconnectionMatrix &data)
 {
-	//WYMAGA SKONCZONEGO KNOTNET
+	//WYMAGA SKONCZONEGO KNOTNETu
 }
 //destruktor
 individual::~individual()

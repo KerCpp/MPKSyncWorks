@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "_slaves.h"
 
 class CStop
 {
@@ -7,7 +8,7 @@ class CStop
 	bool m_knot = false;
 	bool m_terminus = false;
 	std::vector<int> m_lines = {};
-	std::vector<int> m_tTable = {};
+	std::vector<ls> m_tTable = {};
 public:
 	CStop();
 	virtual ~CStop();
@@ -20,7 +21,9 @@ public:
 	const int numOfLines() const;
 	const int id() const;
 	int rating() const;
-	const std::vector<int>& setTTable();
+	const std::vector<ls>& setTTable();
+	const std::vector<ls>& setTTable() const;
+	bool isGood() const;
 private:
 	int _cumPowSum(const std::vector<int>&) const;
 };

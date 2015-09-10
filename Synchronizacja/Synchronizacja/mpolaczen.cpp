@@ -148,3 +148,9 @@ const CLine& CconnectionMatrix::getLineInfo(int i) const
 {
 	return m_allLines[i];
 }
+int CconnectionMatrix::transferTime(int prev, int actual) const
+{
+	if (m_graphRepresentingStopsConnections[prev][actual].m_conj)
+	return m_graphRepresentingStopsConnections[prev][actual].m_transferTime;
+	else return 0;
+}

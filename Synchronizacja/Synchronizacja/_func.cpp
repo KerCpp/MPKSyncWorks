@@ -81,8 +81,8 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 		{
 			bool fin = false;
 			try
-			{
-				fin = tmpOption.fill(c, p);//fin moze zmienic sie na true
+			{//a moze takt w mpolaczen?
+				fin = tmpOption.fill(c, p, pq[version].id(), data, takt);//fin moze zmienic sie na true
 			}
 			catch (int err_id)
 			{

@@ -2,13 +2,10 @@
 #include "Line.h"
 #include "KnotNet.h"
 #include "mpolaczen.h"
+#include "_slaves.h"
 #include <vector>
 
-struct ls//line start
-{
-	int m_id();
-	int m_startTime=0;
-};
+
 //osobnik
 class individual
 {
