@@ -10,3 +10,6 @@ kombinacje - wiadomo
 grupa - klasa reprezentujaca zgrupowanie lini tramwajowych
 KnotNet - ekstrakt z mpolaczen zawiera tylko wezly z nalozonymi przejazdami
 individual - osobnik, w zasadzie uproszczenie KnotNet zawiera tylko czasy odjazdow z petli w takcie dla kazdejz linii
+
+UWAGA: W programie s¹ wykorzystane pêtle for each(typ arg in kolekcja), s¹ one zdaje siê z poza standardu w razie problemów powinno dzia³aæ:
+for(typ arg :kolekcja)
