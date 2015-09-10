@@ -12,7 +12,7 @@ class Ccombinations
 	SviComb m_setkombi;
 	std::vector<int*> m_possibleDeviations;
 public:
-	Ccombinations(const int, const int, const int, int = 1);
+	Ccombinations(const int, const int&, const int&, int = 1);
 	~Ccombinations();//sprzatanie
 	void show()
 	{

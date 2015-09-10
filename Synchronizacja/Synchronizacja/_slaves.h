@@ -57,3 +57,5 @@ struct CgraphKnot
 	bool m_conj = false;
 	int m_transferTime = 0;
 };
+
+int modulo(int, int);

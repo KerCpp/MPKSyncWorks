@@ -21,7 +21,7 @@ public:
 	const int numOfLines() const;
 	const int id() const;
 	int rating() const;
-	const std::vector<ls>& setTTable();
+	std::vector<ls>& setTTable();
 	const std::vector<ls>& setTTable() const;
 	bool isGood() const;
 private:

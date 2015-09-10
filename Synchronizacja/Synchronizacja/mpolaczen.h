@@ -13,6 +13,8 @@ class CconnectionMatrix
 	int m_numOfStops = 0;
 	std::vector<CLine> m_allLines;
 	std::vector<CStop> m_allstops;
+	int m_period = 30;
+	int m_delay = 0;
 public:
 	CconnectionMatrix(){};
 	CconnectionMatrix(std::string fileName);
@@ -26,6 +28,10 @@ public:
 	const CStop& getStopInfo(int) const;
 	const CLine& getLineInfo(int) const;
 	int transferTime(int, int) const;
+	int period() const;
+	int delay() const;
+	int& period();
+	int& delay();
 private:
 	void _fillGraph();
 	int _numOfPrecStops(int&) const;

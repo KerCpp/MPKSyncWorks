@@ -14,7 +14,7 @@ public:
 	bool operator<(const CKnotNet &rhs);
 	const int rating() const;
 	bool isGood() const;//czy wszystkie warunki spelnione sa
-	bool fill(const std::vector<int> &, const std::vector<int> &, int, const CconnectionMatrix &, int);//dodanie nowych lini
+	bool fill(const std::vector<int> &, const std::vector<int> &, int, const CconnectionMatrix &);//dodanie nowych lini
 	bool isKnotGood(int id) const;//czy wezel wypelniony
 	const CStop& retKnot(int) const;
 private:
@@ -23,7 +23,7 @@ private:
 	bool _isKnotEmpty(int) const;
 	bool _badComb(const std::vector<int>&, int, bool=false) const;
 	bool _badPerm(const std::vector<int>&, int) const;
-	void _expand(int, int, int, const CconnectionMatrix&, int);
+	void _expand(int, int, int, const CconnectionMatrix&);
 };
 
   

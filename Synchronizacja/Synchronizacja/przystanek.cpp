@@ -73,7 +73,7 @@ int CStop::_cumPowSum(const std::vector<int>& comb) const
 	}
 }
 //przestawia odjazdy niebezpieczna/ mozna zmienic dlugosc wektora przypadkiem
-const std::vector<ls>& CStop::setTTable()
+std::vector<ls>& CStop::setTTable()
 {
 	return m_tTable;
 }
@@ -84,5 +84,5 @@ const std::vector<ls>& CStop::setTTable() const
 }
 bool CStop::isGood() const
 {
-	////////////////////
+	////////////////////warunki rozkladu , odstepu
 }

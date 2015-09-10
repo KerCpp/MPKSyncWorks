@@ -148,9 +148,30 @@ const CLine& CconnectionMatrix::getLineInfo(int i) const
 {
 	return m_allLines[i];
 }
+// zwraca czas pojazdu pomiedzy przystankiem aktualnym i go poprzedzajacym
 int CconnectionMatrix::transferTime(int prev, int actual) const
 {
 	if (m_graphRepresentingStopsConnections[prev][actual].m_conj)
 	return m_graphRepresentingStopsConnections[prev][actual].m_transferTime;
 	else return 0;
+}
+//dlugosc taktu
+int& CconnectionMatrix::period()
+{
+	return m_period;
+}
+//dopuszczalne opoznienie
+int& CconnectionMatrix::delay()
+{
+	return m_delay;
+}
+//dlugosc taktu
+int CconnectionMatrix::period() const
+{
+	return m_period;
+}
+//dopuszczalne opoznienie
+int CconnectionMatrix::delay() const
+{
+	return m_delay;
 }

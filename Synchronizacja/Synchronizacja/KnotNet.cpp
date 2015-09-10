@@ -1,5 +1,6 @@
 #include "KnotNet.h"
 #include "_slaves.h"
+#include <algorithm>
 
 //konstruktor
 CKnotNet::CKnotNet(const CconnectionMatrix &data)
@@ -29,7 +30,7 @@ bool CKnotNet::isGood() const
 	return true;
 }
 //dodanie nowych lini do grafu, zwraca czy finished
-bool CKnotNet::fill(const std::vector<int> &comb, const std::vector<int> &perm, int idKnot, const CconnectionMatrix &data, int period)
+bool CKnotNet::fill(const std::vector<int> &comb, const std::vector<int> &perm, int idKnot, const CconnectionMatrix &data)
 {
 	if (!_isKnotEmpty(idKnot))
 	{
@@ -50,7 +51,7 @@ bool CKnotNet::fill(const std::vector<int> &comb, const std::vector<int> &perm, 
 				{
 					tTable[i].m_id = perm[i];
 					tTable[i].m_startTime = comb[i];
-					_expand(idKnot, perm[i],comb[i], data, period);
+					_expand(idKnot, perm[i],comb[i], data);
 				}
 			}
 			break;
@@ -149,7 +150,7 @@ bool CKnotNet::_badPerm(const std::vector<int>& perm, int id) const
 	return _badComb(perm, id, true);
 }
 //wpisuje odpowiednie wartosci w calym ukladzie 
-void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &data, int period)
+void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &data)
 {
 	const auto & lineInfo = data.whereLineStops(line);
 	std::vector<ls> knotList = {};//ls jako ks= knot start(linia znana)
@@ -165,10 +166,33 @@ void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &
 			actual = knotList.size() - 1;
 	}
 	knotList[0][1] = knotList[actual][1] - time;//pozwoli zaczac od petli miast wezla w srodku
+	knotList[0][1] = modulo(knotList[0][1], data.period());
 	for (size_t i = 1; i < knotList.size(); i++)
-		knotList[i][1] += knotList[0][1];
-	for each  (auto &knot in m_CStopList)
+		knotList[i][1] = modulo(knotList[i][1]+knotList[i-1][1],data.period());
+
+	for (size_t i = 0; i < knotList.size(); i++)//wypelnianie wezlow
 	{
-		knot//add line time zgodnie z knotList, gfdzie sa czasy ktore jeszcze trzeba zrobic modulo takt
+		for each  (auto &knot in m_CStopList)
+		{
+			if (knot.id() == knotList[i][0])
+			{
+				auto &tTab = knot.setTTable();
+				for (size_t j = 0; j < tTab.size(); j++)
+				{
+					if (tTab[j].m_startTime == -1)
+					{
+						tTab[j].m_id = line;
+						tTab[j].m_startTime = knotList[i][1];
+						std::sort(tTab.begin(), tTab.end(), [](const ls &arg1, const ls &arg2)->bool{return arg1.m_startTime < arg2.m_startTime; });
+						for (size_t k = 1; k < tTab.size(); k++)
+						{
+							if (tTab[k - 1].m_startTime != -1)
+								tTab[k].m_startTime -= tTab[k].m_startTime;
+						}
+						break;
+					}
+				}
+			}
+		}
 	}
 }

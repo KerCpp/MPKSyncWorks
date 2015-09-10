@@ -69,9 +69,8 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 {
 	if (thisOption.isKnotGood(pq[version].id()))//wezel juz wypelniony z poprzednich
 		return syncMagic(pq, data, group, bestOption, thisOption, version + 1);
-
 	CKnotNet tmpOption(thisOption);
-	const SviComb &combi = Ccombinations(pq[version].numOfLines(), 12/*to jako arg pory dnia*/, 3 /*tez arg programu*/).retComb();
+	const SviComb &combi = Ccombinations(pq[version].numOfLines(), data.period(), data.delay()).retComb();
 	const std::vector<int> &lines = data.whichLineStopsHere(pq[version].id());
 	Cpermutation<int,wyswietl> perm(lines, lines.size(), true);
 
@@ -82,7 +81,7 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 			bool fin = false;
 			try
 			{//a moze takt w mpolaczen?
-				fin = tmpOption.fill(c, p, pq[version].id(), data, takt);//fin moze zmienic sie na true
+				fin = tmpOption.fill(c, p, pq[version].id(), data);//fin moze zmienic sie na true
 			}
 			catch (int err_id)
 			{
