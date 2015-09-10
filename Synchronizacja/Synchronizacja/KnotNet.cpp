@@ -34,9 +34,9 @@ bool CKnotNet::fill(const std::vector<int> &comb, const std::vector<int> &perm, 
 {
 	if (!_isKnotEmpty(idKnot))
 	{
-		if (_badComb(comb))
+		if (_badComb(comb,idKnot))
 			throw int(0);
-		if (_badPerm(perm))
+		if (_badPerm(perm,idKnot))
 			throw int(1);
 	}
 	//else jesli pusty
@@ -124,7 +124,7 @@ bool CKnotNet::_isKnotEmpty(int id) const
 	return false;
 }
 //sprawdz czy dopisywana kombinacja jest zgodna z tym co w wezle
-bool CKnotNet::_badComb(const std::vector<int>& cp, int id, bool perm = false) const
+bool CKnotNet::_badComb(const std::vector<int>& cp, int id, bool perm) const
 {
 	int rawNum = 1;
 	if (perm)
@@ -168,15 +168,14 @@ void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &
 	knotList[0][1] = knotList[actual][1] - time;//pozwoli zaczac od petli miast wezla w srodku
 	knotList[0][1] = modulo(knotList[0][1], data.period());
 	for (size_t i = 1; i < knotList.size(); i++)
-		knotList[i][1] = modulo(knotList[i][1]+knotList[i-1][1],data.period());
-
+		knotList[i][1] = modulo(knotList[i][1] + knotList[i - 1][1], data.period());
 	for (size_t i = 0; i < knotList.size(); i++)//wypelnianie wezlow
 	{
-		for each  (auto &knot in m_CStopList)
+		for each  (auto &knot in m_CStopList)// PORBLEM CONST
 		{
 			if (knot.id() == knotList[i][0])
 			{
-				auto &tTab = knot.setTTable();
+				std::vector<ls> &tTab = knot.setTTable();
 				for (size_t j = 0; j < tTab.size(); j++)
 				{
 					if (tTab[j].m_startTime == -1)

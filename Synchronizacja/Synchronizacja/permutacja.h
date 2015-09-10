@@ -16,8 +16,8 @@ dopuszczalna d³ugoœæ ³añcucha znaków to 20
 template < typename TYPE, void(*FUNC)(std::vector<kint<TYPE> > v, int SIZE) >
 class Cpermutation
 {
-	std::vector< std::vector<kint<TYPE> > > m_permutationTab = {};
-	std::vector<kint<TYPE> > m_permutation = {};//tablica z permutracja
+	std::vector< std::vector<kint<TYPE> > > m_permutationTab;
+	std::vector<kint<TYPE> > m_permutation;//tablica z permutracja
 	/////////////////////////////////////////////////////////////////
 
 	friend void FUNC(std::vector<TYPE>, int);//funkcja operujaca na permutacjach
@@ -31,7 +31,7 @@ class Cpermutation
 	void _transfer(const std::vector<TYPE> sequence, int size)//transport ciagu do permutacji
 	{
 		std::vector<TYPE> sequenceCopy = sequence;//kopiowanie
-		sort(sequenceCopy.begin(), sequenceCopy.end(), sort<TYPE>);
+		std::sort(sequenceCopy.begin(), sequenceCopy.end(), [](TYPE lhs, TYPE rhs)->bool{ return lhs < rhs; });
 		for (auto i = 0; i < size; i++)//przek³adanie do w³aœciwego kontenera
 		{
 			m_permutation[size - 1 - i].m_value = sequenceCopy.back();
@@ -55,7 +55,10 @@ class Cpermutation
 				throw "ERR_SAME_VAL";
 		}
 	}
-	inline void _directionChange(const int &position){ (m_permutation[position].m_direction == ) ? m_permutation[position].m_direction = right : m_permutation[position].m_direction = left; };
+	inline void _directionChange(const int &position)
+	{
+		(m_permutation[position].m_direction == left) ? m_permutation[position].m_direction = right : m_permutation[position].m_direction = left; 
+	}
 	inline ullint _factorial(ullint n) { return (n == 1 || n == 0) ? 1 : _factorial(n - 1) * n; }
 	
 public:
@@ -82,12 +85,12 @@ public:
 					_directionChange(i);
 			}
 			if (ctrl_bit)
-				save ? m_permutationTab.pushback(m_permutation) : FUNC(m_permutation, size);
+				save ? m_permutationTab.push_back(m_permutation) : FUNC(m_permutation, size);
 		}
 	}
 	~Cpermutation(){};
-	const std::vector < vector<kint<TYPE> > > & retPermTab() const
+	const std::vector < std::vector<kint<TYPE> > > & retPermTab() const
 	{
-		return m_permutationTab();
+		return m_permutationTab;
 	}
 };

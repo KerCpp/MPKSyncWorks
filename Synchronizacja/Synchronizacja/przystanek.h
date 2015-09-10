@@ -7,8 +7,8 @@ class CStop
 	int m_id = 0;
 	bool m_knot = false;
 	bool m_terminus = false;
-	std::vector<int> m_lines = {};
-	std::vector<ls> m_tTable = {};
+	std::vector<int> m_lines;
+	std::vector<ls> m_tTable;
 public:
 	CStop();
 	virtual ~CStop();

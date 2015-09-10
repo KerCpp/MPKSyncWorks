@@ -4,12 +4,12 @@
 #include <limits>
 class CKnotNet
 {
-	//std::vector<std::vector<int> > m_graphKnotsConn = {};nie potrzebne bo i tak czytam z data
-	std::vector<CStop> m_CStopList = {};
+	std::vector<CStop> m_CStopList;
 	int m_rating = INT_MIN;
 	bool m_fin = false;
 public:
 	CKnotNet(const CconnectionMatrix &data);//musi czytac idki z data
+	CKnotNet();
 	~CKnotNet();
 	bool operator<(const CKnotNet &rhs);
 	const int rating() const;

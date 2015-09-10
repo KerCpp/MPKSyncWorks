@@ -81,7 +81,10 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 			bool fin = false;
 			try
 			{//a moze takt w mpolaczen?
-				fin = tmpOption.fill(c, p, pq[version].id(), data);//fin moze zmienic sie na true
+				std::vector<int> goodperm;
+				for each (auto &elem in p)
+					goodperm.push_back(elem.m_value);
+				fin = tmpOption.fill(c,goodperm, pq[version].id(), data);//fin moze zmienic sie na true
 			}
 			catch (int err_id)
 			{
@@ -114,7 +117,7 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 	return bestOption;
 }
 //sync grupy
-const individual& groupSync(const CconnectionMatrix &data, const Cgroup &group)
+const individual groupSync(const CconnectionMatrix &data, const Cgroup &group)
 {
 	std::vector<CStop> pq = {};
 	for each  (const auto &stop in group.whereLinesStops())//wypelnianie "kolejki"
@@ -128,12 +131,12 @@ const individual& groupSync(const CconnectionMatrix &data, const Cgroup &group)
 		else continue;
 	}
 	std::stable_sort(pq.begin(), pq.end(), KnotComp);
-	CKnotNet bestOption;
+	CKnotNet bestOption(data);
 	syncMagic(pq, data, group,bestOption,bestOption);
-	return individual(bestOption);
+	return individual(bestOption,data);
 }
 //funkcja synchronizuj¹ca
-const individual& sync(const CconnectionMatrix &data, const std::vector<Cgroup> &groups)
+const individual sync(const CconnectionMatrix &data, const std::vector<Cgroup> &groups)
 {
 	individual result;
 	for (auto i = 0u; i < groups.size(); ++i)

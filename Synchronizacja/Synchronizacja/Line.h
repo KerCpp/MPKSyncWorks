@@ -3,7 +3,7 @@
 
 class CLine
 {
-	int m_id;
+	int m_id=0;
 	std::list<int> m_stops;
 public:
 	CLine();

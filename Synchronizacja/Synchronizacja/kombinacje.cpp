@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 //Konstruktor
-Ccombinations::Ccombinations(const int numOfLines, const int beat, const int maxodchyl, int minodstep = 1)
+Ccombinations::Ccombinations(const int numOfLines, const int& beat, const int& maxodchyl, int minodstep)
 {
 	_regularDistribution(beat, numOfLines);
 	m_possibleDeviations.resize(numOfLines + 1);//w ostatniej lini sa odchylki
@@ -108,9 +108,12 @@ void Ccombinations::_addpermutations()
 	{
 		Cpermutation<int, wyswietl> p((*it), (*it).size(), true);
 		it++;
-		for each (const auto &v in p.retPermTab())
+		for each (auto &v in p.retPermTab())
 		{
-			m_setkombi.insert(v);
+			std::vector<int> goodV;
+			for each (auto &elem in v)
+				goodV.push_back(elem.m_value);
+			m_setkombi.insert(goodV);
 		}
 	}
 }

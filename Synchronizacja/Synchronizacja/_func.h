@@ -12,6 +12,6 @@ void wyswietl(std::vector<kint<int> > v, int R);
 
 std::vector<Cgroup> divideIntoGroups(const CconnectionMatrix &matrix);
 
-const individual& sync(const CconnectionMatrix &, const std::vector<Cgroup> &);
+const individual sync(const CconnectionMatrix &, const std::vector<Cgroup> &);
 
 void save(const individual&);

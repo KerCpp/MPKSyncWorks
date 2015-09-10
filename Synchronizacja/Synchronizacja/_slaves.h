@@ -46,7 +46,7 @@ struct ls//line start
 	{
 		if (i == 0)
 			return m_id;
-		else if (i == 1);
+		else if (i == 1)
 			return m_startTime;
 	}
 };

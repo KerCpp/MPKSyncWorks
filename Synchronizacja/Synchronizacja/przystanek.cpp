@@ -3,7 +3,7 @@
 #include <cmath>
 
 //konstrukytor
-CStop::CStop(){}
+CStop::CStop() : m_lines{}, m_tTable{}{};
 //destruktor
 CStop::~CStop(){}
 //czy jest petla
@@ -71,6 +71,7 @@ int CStop::_cumPowSum(const std::vector<int>& comb) const
 		auto diff = abs(m_tTable[i].m_startTime - comb[i]);
 		sum += diff*diff;
 	}
+	return sum;
 }
 //przestawia odjazdy niebezpieczna/ mozna zmienic dlugosc wektora przypadkiem
 std::vector<ls>& CStop::setTTable()
@@ -84,5 +85,6 @@ const std::vector<ls>& CStop::setTTable() const
 }
 bool CStop::isGood() const
 {
+	return true;
 	////////////////////warunki rozkladu , odstepu
 }
