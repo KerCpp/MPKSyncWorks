@@ -171,7 +171,7 @@ void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &
 		knotList[i][1] = modulo(knotList[i][1] + knotList[i - 1][1], data.period());
 	for (size_t i = 0; i < knotList.size(); i++)//wypelnianie wezlow
 	{
-		for each  (auto &knot in m_CStopList)// PORBLEM CONST
+		for (CStop &knot : m_CStopList)// PORBLEM CONST
 		{
 			if (knot.id() == knotList[i][0])
 			{

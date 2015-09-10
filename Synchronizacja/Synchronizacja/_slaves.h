@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <set>
+#include <iostream>
 
 
 //klasa do porownan w zbiorze
@@ -48,6 +49,13 @@ struct ls//line start
 			return m_id;
 		else if (i == 1)
 			return m_startTime;
+		else
+		{
+			std::cerr << "ERR_NO_MORE_ELEM";
+			std::cin.sync();
+			std::cin.get();
+			abort();
+		}
 	}
 };
 
