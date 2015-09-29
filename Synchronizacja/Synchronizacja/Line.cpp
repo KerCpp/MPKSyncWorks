@@ -1,11 +1,5 @@
 #include "Line.h"
 
-//konstruktor
-CLine::CLine() : m_id(0), m_stops()
-{}
-//destruktor
-CLine::~CLine()
-{}
 //lista przystankow linii
 std::list<int> const& CLine::stopsList() const
 {
@@ -15,4 +9,9 @@ std::list<int> const& CLine::stopsList() const
 const int CLine::lineID() const
 {
 	return m_id;
+}
+//lista przystankow linii
+std::list<int> & CLine::stopsList() 
+{
+	return m_stops;
 }

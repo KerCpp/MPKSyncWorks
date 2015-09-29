@@ -9,11 +9,14 @@
 int main(void)
 {
 	//doadac interfejs - zapisywanie i korzystanie ze starych danych
-	std::string folder;
-	std::cout << "Podaj adres folderu z danymi: ";
-	std::cin >> folder;
+	std::string file;
+	std::cout << "Podaj adres pliku z danymi: ";
+	//std::cin >> file;
+	file = "inputdatapora0R.dat";//do testow
 	std::cout << std::endl << "Wczytuje...";
-	CconnectionMatrix data(folder);
+	CconnectionMatrix data(file);
+	data.period() = 15;
+	data.delay() = 3;
 	std::cout << "100%";
 	std::cout << std::endl << "Przeliczanie wezlow...";
 	data.findKnots();

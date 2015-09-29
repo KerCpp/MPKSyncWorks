@@ -10,8 +10,9 @@ class CStop
 	std::vector<int> m_lines;
 	std::vector<ls> m_tTable;
 public:
-	CStop();
-	virtual ~CStop();
+	CStop(): m_lines(), m_tTable(){}
+	CStop(int Id, bool terminus) : CStop(){ m_id = Id; m_terminus = terminus; }
+	~CStop(){}
 	bool isItTerminus() const;
 	bool isItKnot() const;
 	void setKnot();
@@ -23,7 +24,10 @@ public:
 	int rating() const;
 	std::vector<ls>& setTTable();
 	const std::vector<ls>& setTTable() const;
-	bool isGood() const;
+	bool isGood() const;//dopisac costam
+	void addLine(int id);
+	const std::vector<int>& lineList() const;
+
 private:
 	int _cumPowSum(const std::vector<int>&) const;
 };

@@ -2,6 +2,7 @@
 #include <vector>
 #include <set>
 #include <iostream>
+#include <string>
 
 
 //klasa do porownan w zbiorze
@@ -67,3 +68,22 @@ struct CgraphKnot
 };
 
 int modulo(int, int);
+
+struct Ctime
+{
+	int m_h;
+	int m_m;
+	int m_s;
+	Ctime();
+	Ctime(int h, int m, int s) : m_h(h), m_m(m), m_s(s){}
+	int operator-(Ctime);//NIEBEZPIECZNE 
+	friend const std::istream& operator>>(std::istream& INPUT, Ctime & OmNomNom);
+};
+
+class CidParser
+{
+public:
+	int m_programId;
+	std::string m_orgName;
+	CidParser(int i, std::string s) : m_programId(i), m_orgName(s){}
+};

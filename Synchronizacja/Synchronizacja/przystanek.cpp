@@ -2,10 +2,6 @@
 #include "kombinacje.h"
 #include <cmath>
 
-//konstrukytor
-CStop::CStop() : m_lines{}, m_tTable{}{};
-//destruktor
-CStop::~CStop(){}
 //czy jest petla
 bool CStop::isItTerminus() const
 {
@@ -87,4 +83,14 @@ bool CStop::isGood() const
 {
 	return true;
 	////////////////////warunki rozkladu , odstepu
+}
+//dodanie listy do wektora
+void CStop::addLine(int id)
+{
+	m_lines.push_back(id);
+}
+//zrwaca wektor lini
+const std::vector<int>& CStop::lineList() const
+{
+	return m_lines;
 }
