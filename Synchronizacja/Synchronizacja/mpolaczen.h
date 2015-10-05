@@ -8,6 +8,7 @@
 
 class CconnectionMatrix
 {
+	std::vector<std::vector<bool> > m_graphRepresentingLineStopConnections;
 	std::vector<std::vector<CgraphKnot> > m_graphRepresentingStopsConnections;
 	int m_numOfLines = 0;
 	int m_numOfStops = 0;
@@ -42,5 +43,6 @@ private:
 	bool _ifconjunction(const std::vector<CgraphKnot>&, int&) const;
 	bool _stopNotExist(const std::string&, int*);
 	void _addStop(const std::string&, int, bool=false);
+	int _lineParser(std::string) const;
 };
 

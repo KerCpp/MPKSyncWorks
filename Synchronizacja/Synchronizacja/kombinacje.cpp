@@ -14,8 +14,8 @@ Ccombinations::Ccombinations(const int numOfLines, const int& beat, const int& m
 //Destruktor
 Ccombinations::~Ccombinations()//sprzatanie
 {
-	for (auto i = 0u; i < m_possibleDeviations.size(); i++)
-		delete[] m_possibleDeviations[i];
+	//for (auto i = 0u; i < m_possibleDeviations.size(); i++)
+		//delete[] m_possibleDeviations[i];
 }
 //Funkcja wylicza rozk³ad równomierny
 void Ccombinations::_regularDistribution(int beat, const int &numOfLines)
@@ -42,13 +42,15 @@ int Ccombinations::_beatSize(std::vector<int> &komb) const
 //Funkcja wylicza tablice odchylek
 void Ccombinations::_countDeviations(int delay)
 {
-	m_possibleDeviations[m_possibleDeviations.size()-1] = new int[delay * 2 + 1];//wartosci odchylen
+	//m_possibleDeviations[m_possibleDeviations.size()-1] = new int[delay * 2 + 1];//wartosci odchylen
+	m_possibleDeviations[m_possibleDeviations.size() - 1].resize(delay * 2 + 1);//wartosci odchylen
 	for (auto i = 0; i < delay * 2 + 1; i++)
 		m_possibleDeviations[m_possibleDeviations.size() - 1][i] = i-delay;
 
 	for (auto i=0u; i < m_possibleDeviations.size()-1; i++)
 	{
-		m_possibleDeviations[i] = new int[delay * 2 + 1];
+		//m_possibleDeviations[i] = new int[delay * 2 + 1];
+		m_possibleDeviations[i].resize(delay * 2 + 1);
 		for (auto j = 0; j < delay*2+1; j++)
 			m_possibleDeviations[i][j] = std::max(0, (*m_setkombi.begin())[i])+m_possibleDeviations[m_possibleDeviations.size()-1][j];
 	}
@@ -77,7 +79,7 @@ void Ccombinations::_add(int numOfLines, int beat, int delay, int space)
 			}
 
 		}
-		if (_spaceCtrl(toAdd, beat) && _beatSizeCtrl(toAdd, space))
+		if (_spaceCtrl(toAdd, space) && _beatSizeCtrl(toAdd, beat))
 		{
 			std::sort(toAdd.begin(),toAdd.end());
 			m_setkombi.insert(toAdd);
@@ -108,17 +110,21 @@ void Ccombinations::_addpermutations()
 	{
 		Cpermutation<int, wyswietl> p((*it), (*it).size(), true);
 		it++;
+		int  ctrl = 0;
 		for each (auto &v in p.retPermTab())
 		{
-			std::vector<int> goodV;
-			for each (auto &elem in v)
-				goodV.push_back(elem.m_value);
-			m_setkombi.insert(goodV);
+			if (ctrl++ != 0)
+			{
+				std::vector<int> goodV;
+				for each (auto &elem in v)
+					goodV.push_back(elem.m_value);
+				m_setkombi.insert(goodV);
+			}
 		}
 	}
 }
 //zwraca kombinacje
-const SviComb& Ccombinations::retComb()
+const SviComb Ccombinations::retComb()
 {
 	return m_setkombi;
 }

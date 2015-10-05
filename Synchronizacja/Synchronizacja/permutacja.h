@@ -62,11 +62,11 @@ class Cpermutation
 	inline ullint _factorial(ullint n) { return (n == 1 || n == 0) ? 1 : _factorial(n - 1) * n; }
 	
 public:
-	Cpermutation(const std::vector<TYPE> &sequence, const int size, bool save = false)
+	Cpermutation(const std::vector<TYPE> &sequence, const int size, bool save = true)
 	{
 		m_permutation.resize(size);
 		_transfer(sequence, size);
-		FUNC(m_permutation, size);//m_permutation startowa
+		save ? m_permutationTab.push_back(m_permutation) : FUNC(m_permutation, size); //m_permutation startowa
 		for (ullint it = 0; it < _factorial(static_cast<ullint>(size)) - 1; it++)//wszystkie permutacje
 		{
 			kint2<TYPE> eMax;
@@ -89,7 +89,7 @@ public:
 		}
 	}
 	~Cpermutation(){};
-	const std::vector < std::vector<kint<TYPE> > > & retPermTab() const
+	const std::vector < std::vector<kint<TYPE> > >&  retPermTab() const
 	{
 		return m_permutationTab;
 	}

@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CfileLine.cpp" />
     <ClCompile Include="grupa.cpp" />
     <ClCompile Include="individual.cpp" />
     <ClCompile Include="KnotNet.cpp" />
@@ -76,6 +77,7 @@
     <ClCompile Include="_slaves.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CfileLine.h" />
     <ClInclude Include="grupa.h" />
     <ClInclude Include="individual.h" />
     <ClInclude Include="KnotNet.h" />

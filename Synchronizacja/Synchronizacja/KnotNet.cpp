@@ -3,9 +3,10 @@
 #include <algorithm>
 
 //konstruktor
-CKnotNet::CKnotNet(const CconnectionMatrix &data)
+CKnotNet::CKnotNet(const CconnectionMatrix &data) : m_fin(false), m_rating(INT_MIN)
 {
-
+	for (auto i = 0; i < data.numOfStops(); i++)
+		m_CStopList.push_back(data.getStopInfo(i));
 }
 //destruktor
 CKnotNet::~CKnotNet(){}
@@ -142,7 +143,10 @@ bool CKnotNet::_badComb(const std::vector<int>& cp, int id, bool perm) const
 			}
 		}
 	}
-	return true;
+	if (m_CStopList.empty())
+		return false;
+	else
+		return true;
 }
 //sprawdz czy dopisywana permutacja jest zgodna z tym co w wezle
 bool CKnotNet::_badPerm(const std::vector<int>& perm, int id) const
@@ -156,7 +160,7 @@ void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &
 	std::vector<ls> knotList = {};//ls jako ks= knot start(linia znana)
 	int transferTime = 0;
 	int actual = 0;
-	for (size_t i = 0; i < lineInfo.size(); i++)
+	for (auto i = 0u; i < lineInfo.size(); i++)
 	{
 		if (i != 0)
 			transferTime += data.transferTime(i - 1, i);

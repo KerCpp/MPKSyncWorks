@@ -81,6 +81,11 @@ const std::vector<ls>& CStop::setTTable() const
 }
 bool CStop::isGood() const
 {
+	for (auto i = 0u; i < m_tTable.size() - 1; i++)
+	{
+		if (m_tTable[i].m_startTime == 0)
+			return false;
+	}
 	return true;
 	////////////////////warunki rozkladu , odstepu
 }

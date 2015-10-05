@@ -43,6 +43,7 @@ struct ls//line start
 {
 	int m_id = -1;
 	int m_startTime = -1;
+	ls() : m_id(-1), m_startTime(-1){}
 	ls(int id, int time) : m_id(id), m_startTime(time) {}
 	int& operator[](int i)
 	{

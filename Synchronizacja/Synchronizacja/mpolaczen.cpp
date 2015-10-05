@@ -13,10 +13,12 @@ CconnectionMatrix::CconnectionMatrix(std::string fileName)
 	std::ifstream DATA;
 	DATA.open(fileName,std::ios::in);
 
-	m_graphRepresentingStopsConnections.resize(30);
+	m_graphRepresentingStopsConnections.resize(400);
+	m_graphRepresentingLineStopConnections.resize(400);
 	for(auto &v : m_graphRepresentingStopsConnections)
 		v.resize(400);
-
+	for (auto &v : m_graphRepresentingLineStopConnections)
+		v.resize(400);
 	if (DATA.is_open())
 	{
 		std::string actLineRoute = "";
@@ -27,25 +29,29 @@ CconnectionMatrix::CconnectionMatrix(std::string fileName)
 			CfileLine lineReader = CfileLine();
 			DATA >> lineReader;
 			int time = 0;
+			int ipID = 0;
 			if (actLineRoute==lineReader.m_route)
 			{
-				//dodawac przystanki do liniii!!!!!!!!!
 				time = lineReader.m_transferTime - transferTime;
 				_addStop(std::to_string(lineReader.m_stopId), time);
+				_stopNotExist(std::to_string(lineReader.m_stopId), &ipID);
+				m_allLines[_lineParser(lineReader.m_lineId)].stopsList().push_back(ipID);
 				transferTime = lineReader.m_transferTime;
 			}
 			else if (actLineNum==lineReader.m_lineId)
 			{
 				_addStop(std::to_string(lineReader.m_stopId), time, true);
+				_stopNotExist(std::to_string(lineReader.m_stopId), &ipID);
+				m_allLines[_lineParser(lineReader.m_lineId)].stopsList().push_back(ipID);
 				actLineRoute = lineReader.m_route;
 				transferTime = lineReader.m_transferTime;
 			}
 			else
-			{
-				m_allLines.push_back(CLine(numOfLines(), lineReader.m_stopId));
+			{ 
+				_stopNotExist(std::to_string(lineReader.m_stopId), &ipID);
+				m_allLines.push_back(CLine(numOfLines(), ipID));
 				m_idLineTable.push_back(CidParser(m_idLineTable.size(), lineReader.m_lineId));
 				m_numOfLines++;
-
 				_addStop(std::to_string(lineReader.m_stopId), time, true);
 				actLineNum = lineReader.m_lineId;
 				actLineRoute = lineReader.m_route;
@@ -62,21 +68,32 @@ CconnectionMatrix::CconnectionMatrix(std::string fileName)
 	}
 	DATA.close();//kontrola zamkniêcia?
 	//obciecie nadmiaru
-	m_graphRepresentingStopsConnections.resize(m_numOfLines);
-	m_graphRepresentingStopsConnections.shrink_to_fit();
+	m_graphRepresentingLineStopConnections.resize(m_numOfLines);
+	m_graphRepresentingLineStopConnections.shrink_to_fit();
+	m_graphRepresentingStopsConnections.resize(m_numOfStops);
+	m_graphRepresentingStopsConnections.shrink_to_fit();/////////////////////////TUTAJ
+	for (auto &v : m_graphRepresentingLineStopConnections)
+	{
+		v.resize(m_numOfStops);
+		v.shrink_to_fit();
+	}
 	for (auto &v : m_graphRepresentingStopsConnections)
 	{
 		v.resize(m_numOfStops);
 		v.shrink_to_fit();
 	}
+	//przystanki
 	for (auto &stop : m_allstops)
 	{
 		for (auto i = 0; i < m_numOfLines; i++)
 		{
-			if (m_graphRepresentingStopsConnections[i][stop.id()].m_conj = true)
+			if (m_graphRepresentingLineStopConnections[i][stop.id()].m_conj == true)
 				stop.addLine(i);
 		}
 	}
+	//puste miejsca na poszczegolne linie
+	for (auto &stop : m_allstops)
+		stop.setTTable().resize(stop.numOfLines());
 }
 /*
 Zwraca gdzie dana linia siê zatrzymuje
@@ -105,7 +122,7 @@ Czy linia zatrzymuje sie na przystanku
 */
 bool CconnectionMatrix::ifLineStopsHere(const int line, const int stop) const
 {
-	return m_graphRepresentingStopsConnections[line][stop].m_conj;
+	//return m_graphRepresentingStopsConnections[line][stop].m_conj;
 }
 /*
 Ogólna iloœæ lini
@@ -236,6 +253,7 @@ bool CconnectionMatrix::_stopNotExist(const std::string &Id, int* ipId)
 			return false;
 		}
 	}
+	*ipId = m_numOfStops;
 	return true;
 }
 
@@ -245,10 +263,22 @@ void CconnectionMatrix::_addStop(const std::string & Id, int time, bool terminus
 	int ipId = 0;//inside program ID
 	if (_stopNotExist(Id, &ipId))
 	{
-		m_idStopTable.push_back(CidParser(m_idStopTable.size(),Id));
-		m_allstops.push_back(CStop(m_idStopTable.size(), terminus));
+		int size = m_idStopTable.size();
+		m_idStopTable.push_back(CidParser(size,Id));
+		m_allstops.push_back(CStop(size, terminus));
 		m_numOfStops++;
 	}
 	m_graphRepresentingStopsConnections[m_numOfLines - 1][ipId].m_conj = true;
 	m_graphRepresentingStopsConnections[m_numOfLines - 1][ipId].m_transferTime = time;
+}
+
+//zwraca ipID linii
+int CconnectionMatrix::_lineParser(std::string ID) const
+{
+	for (const auto &Cid : m_idLineTable)
+	{
+		if (Cid.m_orgName == ID)
+			return Cid.m_programId;
+	}
+	return m_numOfLines;
 }

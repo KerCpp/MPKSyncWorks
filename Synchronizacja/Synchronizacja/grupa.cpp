@@ -19,7 +19,7 @@ Cgroup::Cgroup(const int &rootID, const CconnectionMatrix &m) : m_matrix(m)
 		for each  (auto &SId in stops)
 		{
 			std::vector<int> lineId = m_matrix.whichLineStopsHere(SId);//wszystkie linie dla przystankow
-			for each  (const int &LId in m_idsOfLines)
+			for each  (const int &LId in lineId)
 				_add(LId);//dodawanie lini dla tych przystankow o ile nie ma
 		}
 		if (numOfLines() == ctrlLines) return;//nie bylo lini do dodania

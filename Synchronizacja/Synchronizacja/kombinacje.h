@@ -10,7 +10,8 @@ typedef std::set<std::vector<int>, vecComp> SviComb;
 class Ccombinations
 {
 	SviComb m_setkombi;
-	std::vector<int*> m_possibleDeviations;
+	//std::vector<int*> m_possibleDeviations;
+	std::vector< std::vector<int> > m_possibleDeviations;
 public:
 	Ccombinations(const int, const int&, const int&, int = 1);
 	~Ccombinations();//sprzatanie
@@ -23,7 +24,7 @@ public:
 			std::cout << std::endl;
 		}
 	}
-	const SviComb& retComb();
+	const SviComb retComb();
 private:
 	void _regularDistribution(int, const int&);//wylicza podstawow¹ kombinacjê która bêdzie przekszta³cana
 	bool _spaceCtrl(std::vector<int>&, int);

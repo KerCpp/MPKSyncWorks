@@ -60,6 +60,7 @@ std::vector<Cgroup> divideIntoGroups(const CconnectionMatrix &matrix)
 			}
 			if (ctrlroot == rootId)//jesli nie nalezy to stworz grupe z tym elementem
 				ctrl = false;
+
 		}
 	}
 	return groups;
@@ -72,11 +73,11 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 	CKnotNet tmpOption(thisOption);
 	const SviComb &combi = Ccombinations(pq[version].numOfLines(), data.period(), data.delay()).retComb();
 	const std::vector<int> &lines = data.whichLineStopsHere(pq[version].id());
-	Cpermutation<int,wyswietl> perm(lines, lines.size(), true);
+	Cpermutation<int,wyswietl> perm(lines, lines.size(),true);
 
-	for each  (const auto &c in combi)
+	for(const auto &c : combi)
 	{
-		for each  (const auto &p in perm.retPermTab())
+		for(const auto &p : perm.retPermTab())
 		{
 			bool fin = false;
 			try
