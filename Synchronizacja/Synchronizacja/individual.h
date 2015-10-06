@@ -12,10 +12,10 @@ class individual
 	std::vector<ls> m_lsVect;
 public:
 	individual();
-	individual(const CKnotNet&, const CconnectionMatrix&);
+	individual(const CKnotNet&, const CconnectionMatrix&);//zrobic
 	//individual(const individual&); automatyczny
 	~individual();
-	individual operator+=(const individual&);
+	individual operator+=(const individual&);//zrobic
 	friend std::ostream& operator<<(std::ostream& out, const individual& rhs);
 	const std::vector<ls>& retGenom() const;
 };

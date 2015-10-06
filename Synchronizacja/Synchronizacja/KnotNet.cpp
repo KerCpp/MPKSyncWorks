@@ -6,7 +6,10 @@
 CKnotNet::CKnotNet(const CconnectionMatrix &data) : m_fin(false), m_rating(INT_MIN)
 {
 	for (auto i = 0; i < data.numOfStops(); i++)
-		m_CStopList.push_back(data.getStopInfo(i));
+	{
+		if (data.getStopInfo(i).isItKnot())
+			m_CStopList.push_back(data.getStopInfo(i));
+	}
 }
 //destruktor
 CKnotNet::~CKnotNet(){}
@@ -40,12 +43,13 @@ bool CKnotNet::fill(const std::vector<int> &comb, const std::vector<int> &perm, 
 		if (_badPerm(perm,idKnot))
 			throw int(1);
 	}
-	//else jesli pusty
-	for each (const auto &stop in m_CStopList)
+	//else jesli pusty lub dobry
+	for(auto &stop : m_CStopList)
 	{
 		if (stop.id() == idKnot)
 		{
-			auto tTable = stop.setTTable();
+			auto &tTable = stop.setTTable();
+
 			for (size_t i = 0; i < tTable.size(); i++)
 			{
 				if (tTable[i][0] == -1)
@@ -169,17 +173,22 @@ void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &
 		if (lineInfo[i] == knotId)
 			actual = knotList.size() - 1;
 	}
-	knotList[0][1] = knotList[actual][1] - time;//pozwoli zaczac od petli miast wezla w srodku
+	{
+		auto minus = knotList[0][1];
+		for (auto &k : knotList)
+			k[1] -= minus;
+	}
+	knotList[0][1] = time - knotList[actual][1];//pozwoli zaczac od "petli" miast wezla w srodku
 	knotList[0][1] = modulo(knotList[0][1], data.period());
 	for (size_t i = 1; i < knotList.size(); i++)
-		knotList[i][1] = modulo(knotList[i][1] + knotList[i - 1][1], data.period());
+		knotList[i][1] = modulo(knotList[i][1] + knotList[0][1], data.period());
 	for (size_t i = 0; i < knotList.size(); i++)//wypelnianie wezlow
 	{
-		for (CStop &knot : m_CStopList)// PORBLEM CONST
+		for (CStop &knot : m_CStopList)
 		{
-			if (knot.id() == knotList[i][0])
+			if (knot.id() == knotList[i][0] && knot.id() != knotId)
 			{
-				std::vector<ls> &tTab = knot.setTTable();
+				auto &tTab = knot.setTTable();
 				for (size_t j = 0; j < tTab.size(); j++)
 				{
 					if (tTab[j].m_startTime == -1)
@@ -190,7 +199,7 @@ void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &
 						for (size_t k = 1; k < tTab.size(); k++)
 						{
 							if (tTab[k - 1].m_startTime != -1)
-								tTab[k].m_startTime -= tTab[k].m_startTime;
+								tTab[k].m_startTime -= tTab[k - 1].m_startTime;
 						}
 						break;
 					}

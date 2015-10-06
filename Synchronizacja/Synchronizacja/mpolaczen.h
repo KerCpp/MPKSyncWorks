@@ -36,13 +36,16 @@ public:
 	int& period();
 	int& delay();
 private:
+	void _fillGraph();
+	void _fillStops();
+	void _resizeGraphs();
 	int _numOfPrecStops(int&) const;
 	int _PrecStopId(int&) const;
 	bool _isNumOfLinesSameAsPrec(int&, int&) const;
 	void _precStopUnKnot(int&);
 	bool _ifconjunction(const std::vector<CgraphKnot>&, int&) const;
 	bool _stopNotExist(const std::string&, int*);
-	void _addStop(const std::string&, int, bool=false);
+	void _addStop(const std::string&, bool=false);
 	int _lineParser(std::string) const;
 };
 

@@ -19,8 +19,8 @@ public:
 	GRKnotComp(const bool& revparam = false) : reverse(revparam) {}
 	bool operator() (const CStop &lhs, const CStop &rhs) const
 	{
-		if (reverse) return (lhs.numOfLines()>rhs.numOfLines());
-		else return (lhs.numOfLines()<rhs.numOfLines());
+		if (reverse) return (lhs.numOfLines()<rhs.numOfLines());
+		else return (lhs.numOfLines()>rhs.numOfLines());
 	}
 }KnotComp;
 
@@ -80,6 +80,7 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 		for(const auto &p : perm.retPermTab())
 		{
 			bool fin = false;
+			tmpOption = thisOption;
 			try
 			{//a moze takt w mpolaczen?
 				std::vector<int> goodperm;

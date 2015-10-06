@@ -12,11 +12,12 @@ int main(void)
 	std::string file;
 	std::cout << "Podaj adres pliku z danymi: ";
 	//std::cin >> file;
-	file = "inputdatapora0R.dat";//do testow
+	//file = "inputdatapora0R.dat";//do testow
+	file = "testowy.dat";
 	std::cout << std::endl << "Wczytuje...";
 	CconnectionMatrix data(file);
 	data.period() = 15;
-	data.delay() = 3;
+	data.delay() = 2;
 	std::cout << "100%";
 	std::cout << std::endl << "Przeliczanie wezlow...";
 	data.findKnots();

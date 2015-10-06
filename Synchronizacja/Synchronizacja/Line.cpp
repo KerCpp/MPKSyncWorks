@@ -1,7 +1,7 @@
 #include "Line.h"
 
 //lista przystankow linii
-std::list<int> const& CLine::stopsList() const
+std::list<ls> const& CLine::stopsList() const
 {
 	return m_stops;
 }
@@ -11,7 +11,7 @@ const int CLine::lineID() const
 	return m_id;
 }
 //lista przystankow linii
-std::list<int> & CLine::stopsList() 
+std::list<ls> & CLine::stopsList() 
 {
 	return m_stops;
 }
