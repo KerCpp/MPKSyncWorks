@@ -15,3 +15,4 @@ std::vector<Cgroup> divideIntoGroups(const CconnectionMatrix &matrix);
 const individual sync(const CconnectionMatrix &, const std::vector<Cgroup> &);
 
 void save(const individual&);
+

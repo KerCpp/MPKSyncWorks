@@ -43,16 +43,18 @@ const int CStop::id() const
 	return m_id;
 }
 //ocenia wêze³
-int CStop::rating() const
+int CStop::rating() const//blad logiczny
 {
+	if (m_tTable.size() == 1) return 0;
 	int stopRate = INT_MIN;
-	Ccombinations comb(numOfLines(), 12, 0);
+	Ccombinations comb(numOfLines(), 15, 0);
 	for each (const auto &c in comb.retComb())
 	{
 		int test = 0 - _cumPowSum(c);
 		//do genetycznego dopisac
 		//dopuszczalne odstepy
 		//warunek rozkladu linii
+		if (test == 0)  return 0;
 		if (stopRate < test)
 			stopRate = test;
 	}
@@ -79,6 +81,7 @@ const std::vector<ls>& CStop::setTTable() const
 {
 	return m_tTable;
 }
+//sprawdza czy wypelniony?
 bool CStop::isGood() const
 {
 	for (auto i = 0u; i < m_tTable.size() - 1; i++)

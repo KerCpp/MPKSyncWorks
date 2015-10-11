@@ -17,7 +17,7 @@ int main(void)
 	std::cout << std::endl << "Wczytuje...";
 	CconnectionMatrix data(file);
 	data.period() = 15;
-	data.delay() = 2;
+	data.delay() = 3;
 	std::cout << "100%";
 	std::cout << std::endl << "Przeliczanie wezlow...";
 	data.findKnots();

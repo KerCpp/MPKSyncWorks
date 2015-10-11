@@ -10,8 +10,7 @@ typedef std::set<std::vector<int>, vecComp> SviComb;
 class Ccombinations
 {
 	SviComb m_setkombi;
-	//std::vector<int*> m_possibleDeviations;
-	std::vector< std::vector<int> > m_possibleDeviations;
+		std::vector< std::vector<int> > m_possibleDeviations;
 public:
 	Ccombinations(const int, const int&, const int&, int = 1);
 	~Ccombinations();//sprzatanie

@@ -20,8 +20,8 @@ private:
 	void _evalFunc();//wystawia rateing
 	bool _finished();//wszystko wypelnione
 	bool _isKnotEmpty(int) const;
-	bool _badComb(const std::vector<int>&, int, bool=false) const;
-	bool _badPerm(const std::vector<int>&, int) const;
+	bool _badComb(const std::vector<int>&, int, const CconnectionMatrix&) const;
+	bool _badPerm(const std::vector<int>&, int, const CconnectionMatrix&) const;
 	void _expand(int, int, int, const CconnectionMatrix&);
 };
 

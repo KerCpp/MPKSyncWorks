@@ -158,4 +158,5 @@ void save(const individual &Arg)
 	fileName += ".txt";
 	resFile.open(fileName, std::ios::out, std::ios::trunc);
 	resFile << Arg;
+	resFile.close();
 }

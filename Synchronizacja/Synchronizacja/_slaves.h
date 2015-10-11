@@ -4,7 +4,19 @@
 #include <iostream>
 #include <string>
 
-
+//cumulative sum specjalnego 
+//template<typename TYPE, typename rTYPE>
+int cumsum(std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int>>> vbeg, std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int>>> vend, bool multi = false, int num = 0)
+{
+	int sum(0);
+	for (auto it = vbeg; vbeg != vend; it++)
+	{
+		if (multi)
+			sum += (*it)[num];
+		sum += (*it);
+	}
+	return sum;
+}
 //klasa do porownan w zbiorze
 struct vecComp
 {
