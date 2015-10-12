@@ -2,6 +2,7 @@
 #include "permutacja.h"
 #include <algorithm>
 #include <iostream>
+#include <numeric>
 //Konstruktor
 Ccombinations::Ccombinations(const int numOfLines, const int& beat, const int& maxodchyl, int minodstep)
 {
@@ -10,6 +11,7 @@ Ccombinations::Ccombinations(const int numOfLines, const int& beat, const int& m
 	_countDeviations(maxodchyl);
 	_add(numOfLines, beat, maxodchyl, minodstep);
 	_addpermutations();
+	//_changeRepresentataion();
 }
 //Destruktor
 Ccombinations::~Ccombinations()//sprzatanie
@@ -128,3 +130,14 @@ const SviComb Ccombinations::retComb()
 {
 	return m_setkombi;
 }
+/*/zmienia reprezentacje z rozkladu co ile na minutowy
+void changeRepresentation(Ccombinations& comb)
+{
+	for (auto &comb : m_setkombi)
+	{
+		std::vector<int> result[20];
+		std::partial_sum(comb.begin(), comb.end(), result);
+		for (auto i = 0u; i < comb.size(); i++)
+			comb[i] = result[i];
+	}
+}*/

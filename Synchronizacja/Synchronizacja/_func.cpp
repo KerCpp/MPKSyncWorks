@@ -79,6 +79,8 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 	{
 		for(const auto &p : perm.retPermTab())
 		{
+			static int count;
+			std::cout << count++ << "   ";
 			bool fin = false;
 			tmpOption = thisOption;
 			try
@@ -103,6 +105,7 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 			{
 				if (fin)
 				{
+					//std::cout << tmpOption.rating() << "     ";
 					if (bestOption.rating() < tmpOption.rating())
 						bestOption = tmpOption;
 				}

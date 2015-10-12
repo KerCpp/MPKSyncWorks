@@ -1,6 +1,7 @@
 #include "_slaves.h"
 #include <cmath>
 #include <sstream>
+#include <algorithm>
 
 /*
 Funkcja sprawdzaj¹ca czy element jest w zbiorze
@@ -41,4 +42,17 @@ const std::istream& operator>>(std::istream& INPUT, Ctime & OmNomNom)
 	ss << tmp;
 	ss >> OmNomNom.m_s;
 	return INPUT;
+}
+//takie tam do sortowania comb i perm
+void __presort(std::vector<int>& c, std::vector<int>& p)
+{
+	std::vector<ls> sorter;
+	for (auto i = 0u; i < c.size(); i++)
+		sorter.push_back(ls(p[i], c[i]));
+	std::sort(sorter.begin(), sorter.end(), [](const ls &arg1, const ls &arg2)->bool{return arg1.m_startTime > arg2.m_startTime; });
+	for (auto i = 0u; i < c.size(); i++)
+	{
+		c[i] = sorter[i][1];
+		p[i] = sorter[i][0];
+	}
 }

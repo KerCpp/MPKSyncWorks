@@ -1,6 +1,7 @@
 #include "przystanek.h"
 #include "kombinacje.h"
 #include <cmath>
+#include <numeric>
 
 //czy jest petla
 bool CStop::isItTerminus() const
@@ -43,14 +44,16 @@ const int CStop::id() const
 	return m_id;
 }
 //ocenia wêze³
-int CStop::rating() const//blad logiczny
+int CStop::rating() const
 {
 	if (m_tTable.size() == 1) return 0;
 	int stopRate = INT_MIN;
 	Ccombinations comb(numOfLines(), 15, 0);
-	for each (const auto &c in comb.retComb())
+	for(auto &c : comb.retComb())
 	{
-		int test = 0 - _cumPowSum(c);
+		auto cCopy(c);
+		std::partial_sum(c.begin(), c.end(), cCopy.begin());
+		int test = 0 - _cumPowSum(cCopy);
 		//do genetycznego dopisac
 		//dopuszczalne odstepy
 		//warunek rozkladu linii
@@ -64,9 +67,12 @@ int CStop::rating() const//blad logiczny
 int CStop::_cumPowSum(const std::vector<int>& comb) const
 {
 	int sum = 0;
+	auto tT = m_tTable.back().m_startTime;
+	auto c = comb.back();
+	int tTDelay = tT == c ? 0 : c - tT;
 	for (size_t i = 0; i < m_tTable.size(); i++)
 	{
-		auto diff = abs(m_tTable[i].m_startTime - comb[i]);
+		auto diff = abs(m_tTable[i].m_startTime - comb[i] + tTDelay);
 		sum += diff*diff;
 	}
 	return sum;
@@ -81,12 +87,12 @@ const std::vector<ls>& CStop::setTTable() const
 {
 	return m_tTable;
 }
-//sprawdza czy wypelniony?
+//sprawdza czy prawidlowo wypelniony
 bool CStop::isGood() const
 {
 	for (auto i = 0u; i < m_tTable.size() - 1; i++)
 	{
-		if (m_tTable[i].m_startTime == 0)
+		if (m_tTable[i].m_startTime == m_tTable[i+1].m_startTime)//jesli przyjazd w tym samym czasie
 			return false;
 	}
 	return true;

@@ -33,3 +33,4 @@ private:
 	void _countDeviations(int);
 	void _addpermutations(); 
 };
+//void changeRepresentation(Ccombinations&);

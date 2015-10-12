@@ -1,6 +1,7 @@
 #include "KnotNet.h"
 #include "_slaves.h"
 #include <algorithm>
+#include <numeric>
 
 //konstruktor sieci opartej o wezly
 CKnotNet::CKnotNet(const CconnectionMatrix &data) : m_fin(false), m_rating(INT_MIN)
@@ -36,29 +37,43 @@ bool CKnotNet::isGood() const
 //dodanie nowych lini do grafu, zwraca czy finished
 bool CKnotNet::fill(const std::vector<int> &comb, const std::vector<int> &perm, int idKnot, const CconnectionMatrix &data)
 {
+	bool tested = false;
 	if (!_isKnotEmpty(idKnot))
 	{
-		if (_badComb(comb,idKnot, data))//blad logiczny
+		tested = true;
+		auto test = _badPermComb(perm, comb, idKnot);
+		switch (test)
+		{
+		case 0:
 			throw int(0);
-		if (_badPerm(perm,idKnot, data))
+			break;
+		case 1:
 			throw int(1);
+			break;
+		default:
+			break;
+		}
 	}
 	//else jesli pusty lub dobry
+	auto combC(comb);
+	auto permC(perm);
+	std::partial_sum(comb.begin(), comb.end(), combC.begin());
+	if (tested) _cut(combC, permC, idKnot);
 	for(auto &stop : m_CStopList)
 	{
 		if (stop.id() == idKnot)
 		{
 			auto &tTable = stop.setTTable();
-
 			for (size_t i = 0; i < tTable.size(); i++)
 			{
 				if (tTable[i][0] == -1)
 				{
-					tTable[i].m_id = perm[i];
-					tTable[i].m_startTime = comb[i];
-					_expand(idKnot, perm[i],comb[i], data);//blad logiczny
+					tTable[i].m_id = permC[i];
+					tTable[i].m_startTime = combC[i];
+					_expand(idKnot, perm[i],comb[i], data);
 				}
 			}
+			std::sort(tTable.begin(), tTable.end(), [](const ls &arg1, const ls &arg2)->bool{return arg1.m_startTime < arg2.m_startTime; });
 			break;
 		}
 	}
@@ -128,56 +143,53 @@ bool CKnotNet::_isKnotEmpty(int id) const
 	}
 	return false;
 }
-//sprawdz czy dopisywana kombinacja jest zgodna z tym co w wezle
-bool CKnotNet::_badComb(const std::vector<int>& comb, int id, const CconnectionMatrix &data) const
+//sprawdz czy dopisywana permutacja/combinacja jest zgodna z tym co w wezle
+short int CKnotNet::_badPermComb(const std::vector<int>& perm, const std::vector<int>& comb, int id) const
 {
-	int rawNum = 1;
-	///////////////
-	for(const auto &stop : m_CStopList)
-	{
-		if (stop.id() == id)
-		{
-			auto tTable = stop.setTTable();
-			auto tTCopy(tTable);
-			auto combCopy(comb);
-			auto itC = combCopy.end();
-			auto itT= tTCopy.end();
-			for (auto i = combCopy.size()-1; i > 0; i--)
-			{
-				//przetworzenie na czas wzgledem minuty 0
-			}
-		}
-	} 
-		return true;
-}
-//sprawdz czy dopisywana permutacja jest zgodna z tym co w wezle
-bool CKnotNet::_badPerm(const std::vector<int>& perm, int id, const CconnectionMatrix &data) const
-{
-	{
+	enum badThings{badComb, badPerm, Good};
 		int rawNum = 0;
-		for each (const auto &stop in m_CStopList)
+		for (const auto &stop : m_CStopList)
 		{
 			if (stop.id() == id)
 			{
 				auto tTable = stop.setTTable();
+				std::vector<int> combCopy(comb);
+				std::partial_sum(comb.begin(), comb.end(), combCopy.begin());
+				int opt = 0;
 				for (size_t i = 0; i < tTable.size(); i++)
 				{
-					if (tTable[i][rawNum] != perm[i] && tTable[i][rawNum] != -1)
-						return false;
+					if (tTable[i][0] != -1)
+					{
+						auto tmp = opt;
+						for (size_t j = opt; j < tTable.size(); j++)
+						{
+							if (perm[j] == tTable[i][0])
+							{
+								if (comb[j] == tTable[i][1])
+								{
+									opt = j + 1;
+									break;
+								}
+								else
+									return badComb;
+							}
+						}
+						if (tmp == opt) return badPerm;
+					}
 				}
 			}
 		}
-		return true;
-	}
+		return Good;//true
 }
-//wpisuje odpowiednie wartosci w calym ukladzie 
+//przelicza i wpisuje odpowiednie wartosci w calym ukladzie 
 void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &data)
 {
 	const auto & lineInfo = data.whereLineStops(line);
 	std::vector<ls> knotList = {};//ls jako ks= knot start(linia znana)
 	int transferTime = 0;
 	int actual = 0;
-	for (auto i = 0u; i < lineInfo.size(); i++)
+
+	for (auto i = 0u; i < lineInfo.size(); i++)//przeliczenie czasow na inne przystanki
 	{
 		if (i != 0)
 			transferTime += data.transferTime(i - 1, i);
@@ -195,6 +207,7 @@ void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &
 	knotList[0][1] = modulo(knotList[0][1], data.period());
 	for (size_t i = 1; i < knotList.size(); i++)
 		knotList[i][1] = modulo(knotList[i][1] + knotList[0][1], data.period());
+
 	for (size_t i = 0; i < knotList.size(); i++)//wypelnianie wezlow
 	{
 		for (CStop &knot : m_CStopList)
@@ -208,17 +221,38 @@ void CKnotNet::_expand(int knotId, int line, int time, const CconnectionMatrix &
 					{
 						tTab[j].m_id = line;
 						tTab[j].m_startTime = knotList[i][1];
-						// czy sortowac teraz czy moze na samym koncu?
 						std::sort(tTab.begin(), tTab.end(), [](const ls &arg1, const ls &arg2)->bool{return arg1.m_startTime < arg2.m_startTime; });
-						for (auto k = tTab.size()-1; k > 0; k++)
-						{
-							if (tTab[k - 1].m_startTime != -1)
-								tTab[k].m_startTime -= tTab[k - 1].m_startTime;
-						}
 						break;
 					}
 				}
 			}
 		}
 	}
+}
+//obcina dopisywane dane o to co juz jest w wezle
+void CKnotNet::_cut(std::vector<int>& perm, std::vector<int>& comb, int id) const
+{
+	int rawNum = 0;
+	for (const auto &stop : m_CStopList)
+	{
+		if (stop.id() == id)
+		{
+			auto tTable = stop.setTTable();
+			for (size_t i = 0; i < tTable.size(); i++)
+			{
+				if (tTable[i][0] != -1)
+				{
+					for (size_t j = 0; j < tTable.size(); j++)
+					{
+						if (perm[j] == tTable[i][0])
+						{
+							perm[j] = -1;
+							comb[j] = -1;
+						}
+					}
+				}
+			}
+		}
+	}
+	__presort(comb, perm);
 }

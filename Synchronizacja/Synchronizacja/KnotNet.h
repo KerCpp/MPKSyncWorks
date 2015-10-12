@@ -20,9 +20,10 @@ private:
 	void _evalFunc();//wystawia rateing
 	bool _finished();//wszystko wypelnione
 	bool _isKnotEmpty(int) const;
-	bool _badComb(const std::vector<int>&, int, const CconnectionMatrix&) const;
-	bool _badPerm(const std::vector<int>&, int, const CconnectionMatrix&) const;
+	//bool _badComb(const std::vector<int>&, int, const CconnectionMatrix&) const;
+	short int _badPermComb(const std::vector<int>&, const std::vector<int>&, int) const;
 	void _expand(int, int, int, const CconnectionMatrix&);
+	void _cut(std::vector<int>&, std::vector<int>&, int) const;
 };
 
   
