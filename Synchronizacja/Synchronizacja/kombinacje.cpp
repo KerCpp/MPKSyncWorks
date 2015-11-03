@@ -2,16 +2,34 @@
 #include "permutacja.h"
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <numeric>
 //Konstruktor
 Ccombinations::Ccombinations(const int numOfLines, const int& beat, const int& maxodchyl, int minodstep)
 {
-	_regularDistribution(beat, numOfLines);
-	m_possibleDeviations.resize(numOfLines + 1);//w ostatniej lini sa odchylki
-	_countDeviations(maxodchyl);
-	_add(numOfLines, beat, maxodchyl, minodstep);
-	_addpermutations();
-	//_changeRepresentataion();
+	std::string fileName="./";
+	fileName += std::to_string(numOfLines);
+	fileName += "_";
+	fileName += std::to_string(beat);
+	fileName += "_";
+	fileName += std::to_string(maxodchyl);
+	fileName += "_";
+	fileName += std::to_string(minodstep);
+	fileName += ".comb";
+	if (fileExist(fileName))
+	{
+		_read(fileName);
+	}
+	else
+	{
+		_regularDistribution(beat, numOfLines);
+		m_possibleDeviations.resize(numOfLines + 1);//w ostatniej lini sa odchylki
+		_countDeviations(maxodchyl);
+		_add(numOfLines, beat, maxodchyl, minodstep);
+		_addpermutations();
+		_write(fileName);
+		//_changeRepresentataion();
+	}
 }
 //Destruktor
 Ccombinations::~Ccombinations()//sprzatanie
@@ -141,3 +159,42 @@ void changeRepresentation(Ccombinations& comb)
 			comb[i] = result[i];
 	}
 }*/
+void Ccombinations::_read(const std::string& fileName)
+{
+	std::ifstream FILE;
+	FILE.open(fileName, std::ios::in | std::ios::binary);
+	while (true)
+	{
+		std::vector<int> vect = {};
+		int tmp = 0;
+		char sign = 0;
+		FILE >> sign;
+		if (FILE.eof())
+			break;
+		while (sign != ')' && (sign == '(' || sign == ','))
+		{
+			FILE >> tmp;
+			vect.push_back(tmp);
+			FILE >> sign;
+		}
+		m_setkombi.insert(vect);
+	}
+	FILE.close();
+}
+void Ccombinations::_write(const std::string& fileName)
+{
+	std::ofstream FILE;
+	FILE.open(fileName, std::ios::out | std::ios::binary);
+	for (auto& comb : m_setkombi)
+	{
+		FILE << "(";
+		for (auto i = 0u; i < comb.size(); i++)
+		{
+			if (i != 0)
+				FILE << ",";
+			FILE << comb[i];
+		}
+		FILE << ")";
+	}
+	FILE.close();
+}

@@ -32,6 +32,7 @@ bool CKnotNet::isGood() const
 		if (!knot.isGood())
 			return false;
 	}
+	//if (!_mijanka()) return false;
 	return true;
 }
 //dodanie nowych lini do grafu, zwraca czy finished
@@ -77,7 +78,8 @@ bool CKnotNet::fill(const std::vector<int> &comb, const std::vector<int> &perm, 
 			break;
 		}
 	}
-
+	if (!isGood())
+		throw int(2);
 	if (_finished())
 		_evalFunc();
 	return m_fin;
@@ -97,7 +99,7 @@ bool CKnotNet::_finished()
 	return true;
 }
 //czy dany wezel juz jest wypelniony
-bool CKnotNet::isKnotGood(int id) const
+bool CKnotNet::isKnotFull(int id) const
 {
 	for each (const auto &knot in m_CStopList)
 	{

@@ -32,5 +32,7 @@ private:
 	void _add(int,int,int,int);
 	void _countDeviations(int);
 	void _addpermutations(); 
+	void _read(const std::string&);
+	void _write(const std::string&);
 };
 //void changeRepresentation(Ccombinations&);

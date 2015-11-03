@@ -2,6 +2,9 @@
 #include <cmath>
 #include <sstream>
 #include <algorithm>
+#include <Windows.h>
+#include <sys/stat.h>
+
 
 /*
 Funkcja sprawdzaj¹ca czy element jest w zbiorze
@@ -55,4 +58,12 @@ void __presort(std::vector<int>& c, std::vector<int>& p)
 		c[i] = sorter[i][1];
 		p[i] = sorter[i][0];
 	}
+}
+//kontrola istnienia pliku tylko windows
+bool fileExist(std::string& fileName)
+{
+	struct stat buf;
+	if (stat(fileName.c_str(), &buf) == 0)
+		return true;
+	else return false;
 }

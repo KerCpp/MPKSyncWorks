@@ -96,7 +96,7 @@ bool CStop::isGood() const
 			return false;
 	}
 	return true;
-	////////////////////warunki rozkladu , odstepu
+	////////////////////warunki rozkladu , odchylki
 }
 //dodanie listy do wektora
 void CStop::addLine(int id)

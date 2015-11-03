@@ -24,6 +24,13 @@ public:
 	}
 }KnotComp;
 
+//czy kombinacja jest niepoprawna z punktu widzenia algorytmu
+bool badComb(const std::vector<int>& comb, const CconnectionMatrix& data)
+{
+	return false;
+}
+
+
 /*
 Funkcja testowa
 */
@@ -68,7 +75,7 @@ std::vector<Cgroup> divideIntoGroups(const CconnectionMatrix &matrix)
 //tu sie dzieje cala magia(rekurencji)
 CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data, const Cgroup &group, CKnotNet &bestOption, CKnotNet thisOption, int version = 0)
 {
-	if (thisOption.isKnotGood(pq[version].id()))//wezel juz wypelniony z poprzednich
+	if (thisOption.isKnotFull(pq[version].id()))//wezel juz wypelniony z poprzednich
 		return syncMagic(pq, data, group, bestOption, thisOption, version + 1);
 	CKnotNet tmpOption(thisOption);
 	const SviComb &combi = Ccombinations(pq[version].numOfLines(), data.period(), data.delay()).retComb();
@@ -77,6 +84,7 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 
 	for(const auto &c : combi)
 	{
+		if (badComb(c,data)) continue;
 		for(const auto &p : perm.retPermTab())
 		{
 			static int count;
@@ -96,27 +104,24 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 					break;
 				if (err_id == 1)
 					continue;
+				if (err_id == 2)
+				{
+					tmpOption = thisOption;
+					continue;
+				}
 				std::cerr << "ERR_UNEX_EXP_THROWN";
 				std::cin.sync();
 				std::cin.get();
 				std::abort();
 			}
-			if (tmpOption.isGood())
+			if (fin)
 			{
-				if (fin)
-				{
-					//std::cout << tmpOption.rating() << "     ";
-					if (bestOption.rating() < tmpOption.rating())
-						bestOption = tmpOption;
-				}
-				else
-					syncMagic(pq, data, group, bestOption, tmpOption, version + 1);
+				//std::cout << tmpOption.rating() << "     ";
+				if (bestOption.rating() < tmpOption.rating())
+					bestOption = tmpOption;
 			}
 			else
-			{
-				tmpOption = thisOption;
-				continue;
-			}
+				syncMagic(pq, data, group, bestOption, tmpOption, version + 1);
 		}
 	}
 	return bestOption;

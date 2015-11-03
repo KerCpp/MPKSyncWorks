@@ -14,7 +14,7 @@ public:
 	const int rating() const;
 	bool isGood() const;//czy wszystkie warunki spelnione sa
 	bool fill(const std::vector<int> &, const std::vector<int> &, int, const CconnectionMatrix &);//dodanie nowych lini
-	bool isKnotGood(int id) const;//czy wezel wypelniony
+	bool isKnotFull(int id) const;//czy wezel wypelniony
 	const CStop& retKnot(int) const;
 private:
 	void _evalFunc();//wystawia rateing

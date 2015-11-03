@@ -88,4 +88,6 @@ public:
 	CidParser(int i, std::string s) : m_programId(i), m_orgName(s){}
 };
 
-void __presort(std::vector<int>&, std::vector<int>&);
+void __presort(std::vector<int>& c, std::vector<int>& p);
+bool fileExist(std::string&);
+

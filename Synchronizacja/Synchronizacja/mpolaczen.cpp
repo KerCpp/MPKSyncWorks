@@ -30,19 +30,27 @@ CconnectionMatrix::CconnectionMatrix(std::string fileName)
 			DATA >> lineReader;
 			int time = 0;
 			int ipID = 0;
+			int actLineID = numOfLines()-1;
 			if (actLineRoute == lineReader.m_route)
 			{
 				time = lineReader.m_transferTime - transferTime;
 				_addStop(std::to_string(lineReader.m_stopId));
 				_stopNotExist(std::to_string(lineReader.m_stopId), &ipID);
-				m_allLines[_lineParser(lineReader.m_lineId)].stopsList().push_back(ls(ipID, time));
+				//m_allLines[_lineParser(lineReader.m_lineId)].stopsList().push_back(ls(ipID, time));
+				m_allLines[actLineID].stopsList().push_back(ls(ipID, time));
 				transferTime = lineReader.m_transferTime;
 			}
 			else if (actLineNum == lineReader.m_lineId)
 			{
-				_addStop(std::to_string(lineReader.m_stopId), true);
 				_stopNotExist(std::to_string(lineReader.m_stopId), &ipID);
-				m_allLines[_lineParser(lineReader.m_lineId)].stopsList().push_back(ls(ipID, time));
+				m_allLines.push_back(CLine(numOfLines(), ipID));
+				m_idLineTable.push_back(CidParser(m_idLineTable.size(), lineReader.m_lineId));
+				m_numOfLines++;
+				_addStop(std::to_string(lineReader.m_stopId), true);
+				/*
+				_stopNotExist(std::to_string(lineReader.m_stopId), &ipID);
+				m_allLines[actLineID].stopsList().push_back(ls(ipID, time));
+				*/
 				actLineRoute = lineReader.m_route;
 				transferTime = lineReader.m_transferTime;
 			}
@@ -264,6 +272,8 @@ void CconnectionMatrix::_fillGraph()
 {
 	for (auto &line : m_allLines)
 	{
+		if (line.stopsList().size() == 1)
+			continue;
 		auto it = line.stopsList().begin();
 		auto itNext = line.stopsList().begin();
 		itNext++;
