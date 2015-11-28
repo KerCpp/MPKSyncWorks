@@ -75,8 +75,18 @@ std::vector<Cgroup> divideIntoGroups(const CconnectionMatrix &matrix)
 //tu sie dzieje cala magia(rekurencji)
 CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data, const Cgroup &group, CKnotNet &bestOption, CKnotNet thisOption, int version = 0)
 {
+	static int count;
 	if (thisOption.isKnotFull(pq[version].id()))//wezel juz wypelniony z poprzednich
+	{
 		return syncMagic(pq, data, group, bestOption, thisOption, version + 1);
+		////////////RAPORT//////////////////
+		std::fstream raport;
+		raport.open("raport.txt", std::ios::app);
+		raport << count++ << ";" << clock() / CLOCKS_PER_SEC << "s;" << pq[version].id() << ";";
+		raport << version << std::endl;
+		raport.close();
+		////////////RAPORT//////////////////
+	}
 	CKnotNet tmpOption(thisOption);
 	const SviComb &combi = Ccombinations(pq[version].numOfLines(), data.period(), data.delay()).retComb();
 	const std::vector<int> &lines = data.whichLineStopsHere(pq[version].id());
@@ -87,8 +97,20 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 		if (badComb(c,data)) continue;
 		for(const auto &p : perm.retPermTab())
 		{
-			static int count;
-			std::cout << count++ << "   ";
+			////////////RAPORT//////////////////
+
+			std::fstream raport;
+			raport.open("raport.txt", std::ios::app);
+			raport << count++ << ";" << clock() / CLOCKS_PER_SEC << "s;" << pq[version].id() << ";";
+ 			raport << version << ";" << p.size() << ";";
+			for (auto i = 0u; i < p.size(); i++)
+				raport << p[i].m_value << ";";
+			for (auto i = 0u; i < p.size(); i++)
+				raport << c[i] << ";";
+			raport << std::endl;
+			raport.close();
+			////////////RAPORT//////////////////
+//			std::cout << count++ << "   ";
 			bool fin = false;
 			tmpOption = thisOption;
 			try
@@ -119,6 +141,11 @@ CKnotNet& syncMagic(const std::vector<CStop> &pq, const CconnectionMatrix &data,
 				//std::cout << tmpOption.rating() << "     ";
 				if (bestOption.rating() < tmpOption.rating())
 					bestOption = tmpOption;
+				////////////RAPORT//////////////////
+				raport.open("raport.txt", std::ios::app);
+				raport << "fin" << bestOption.rating() << std::endl;
+				raport.close();
+				////////////RAPORT//////////////////
 			}
 			else
 				syncMagic(pq, data, group, bestOption, tmpOption, version + 1);
@@ -143,7 +170,7 @@ const individual groupSync(const CconnectionMatrix &data, const Cgroup &group)
 	std::stable_sort(pq.begin(), pq.end(), KnotComp);
 	CKnotNet bestOption(data);
 	syncMagic(pq, data, group,bestOption,bestOption);
-	return individual(bestOption,data);
+ 	return individual(bestOption,data);
 }
 //funkcja synchronizuj¹ca
 const individual sync(const CconnectionMatrix &data, const std::vector<Cgroup> &groups)

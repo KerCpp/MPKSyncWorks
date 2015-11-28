@@ -8,9 +8,10 @@
 Konstruktor
 fileName - nazwa pliku z danymi
 */
-CconnectionMatrix::CconnectionMatrix(std::string fileName)
+CconnectionMatrix::CconnectionMatrix(std::string fileNameBase)
 {
 	std::ifstream DATA;
+	auto fileName = fileNameBase + "linie.dat";
 	DATA.open(fileName, std::ios::in);
 
 	m_graphRepresentingStopsConnections.resize(400);
@@ -78,6 +79,57 @@ CconnectionMatrix::CconnectionMatrix(std::string fileName)
 	_fillGraph();
 	_resizeGraphs();
 	_fillStops();
+
+	fileName = fileNameBase + "mijanki.dat";
+	DATA.open(fileName, std::ios::in);
+	if (DATA.is_open())
+	{
+		loopLine loop;
+		char sign;
+		int val;
+		int number;
+		DATA >> number;
+		for (auto i = 0; i < number; i++)
+		{
+			DATA >> val;
+			loop.m_LId = val;
+			DATA >> sign;
+			DATA >> val;
+			loop.m_sID1 = val;
+			DATA >> sign;
+			DATA >> val;
+			loop.m_sID2 = val;
+			DATA >> sign;
+			DATA >> val;
+			loop.m_time = val;
+			m_loops.push_back(loop);
+		}
+	}
+	else
+	{
+		std::cerr << "ERR_OPENING_FILE";
+		std::cin.sync();
+		std::cin.get();
+		abort();
+	}
+	DATA.close();
+	
+	/*
+	fileName = fileNameBase + "warunki.dat";
+	DATA.open(fileName, std::ios::in);
+
+	if (DATA.is_open())
+	{
+	}
+	else
+	{
+		std::cerr << "ERR_OPENING_FILE";
+		std::cin.sync();
+		std::cin.get();
+		abort();
+	}
+	DATA.close();
+	*/
 }
 /*
 Zwraca gdzie dana linia siê zatrzymuje
@@ -106,7 +158,7 @@ Czy linia zatrzymuje sie na przystanku
 */
 bool CconnectionMatrix::ifLineStopsHere(const int line, const int stop) const
 {
-	//return m_graphRepresentingStopsConnections[line][stop].m_conj;
+	return m_graphRepresentingLineStopConnections[line][stop];
 }
 /*
 Ogólna iloœæ lini
@@ -149,6 +201,7 @@ void CconnectionMatrix::findKnots()
 			break;
 		}
 	}
+	_updateLoops();
 }
 //Ilosc poprzedzajacych przystanek przystankow
 int CconnectionMatrix::_numOfPrecStops(int& id) const
@@ -170,7 +223,7 @@ bool CconnectionMatrix::_isNumOfLinesSameAsPrec(int &id, int &precId) const
 void CconnectionMatrix::_precStopUnKnot(int &id)
 {
 	auto &ref = m_allstops[id];
-	if (ref.isItKnot())
+	if (ref.isItKnot() && !ref.isItTerminus())//petle sa potrzebne do mijanki i sa fajne przy rzytowaniu na osobnika
 		ref.unsetKnot();
 }
 //sprawdza wartosc w grafie
@@ -256,7 +309,6 @@ void CconnectionMatrix::_addStop(const std::string & Id, bool terminus)
 	//m_graphRepresentingStopsConnections[m_numOfLines - 1][ipId].m_conj = true;
 	//m_graphRepresentingStopsConnections[m_numOfLines - 1][ipId].m_transferTime = time;
 }
-
 //zwraca ipID linii
 int CconnectionMatrix::_lineParser(std::string ID) const
 {
@@ -318,4 +370,57 @@ void CconnectionMatrix::_resizeGraphs()
 		v.resize(m_numOfStops);
 		v.shrink_to_fit();
 	}
+}
+//aktualizacja mijanek
+void CconnectionMatrix::_updateLoops()
+{
+	for (auto &loop : m_loops)
+	{
+		_ulHelp(loop, 1);
+		_ulHelp(loop, 2);
+		loop.m_ctrlsum = (_lineParser(std::to_string(loop.m_LId)) << 1) + 1;
+		loop.m_timeLag = modulo(loop.m_timeLag, m_period);
+	}
+}
+
+void CconnectionMatrix::_ulHelp(loopLine& loop,int opt)
+{
+	int ipID=0;
+	int *sID=nullptr;
+	switch (opt)
+	{
+	case 1:
+		sID = &loop.m_sID1;
+		break;
+	case 2:
+		sID = &loop.m_sID2;
+		break;
+	}
+	_stopNotExist(std::to_string(*sID), &ipID);
+	*sID = ipID;
+	if (!m_allstops[ipID].isItKnot())
+	{
+		auto LiD = _lineParser(std::to_string(loop.m_LId));
+		if (!ifLineStopsHere(LiD, ipID))//jak nie jedzie w jedna strone to jedzie w druga
+			LiD = LiD + 1;
+		auto &temp = m_allLines[LiD].stopsList();
+		//auto it = myfind(temp.begin(), temp.end(), ipID);
+		auto it = temp.begin();
+		while ((*it).m_id != ipID)
+			it++;
+		while (!m_allstops[(*it).m_id].isItKnot())
+		{
+			auto lag = (*it--).m_startTime;
+			if (opt == 1)
+				loop.m_timeLag += lag;
+			if (opt == 2)
+				loop.m_timeLag -= lag;
+		}
+		*sID = (*it).m_id;
+	}
+}
+//mijanki zwraca
+std::vector<loopLine> CconnectionMatrix::retLoops() const
+{
+	return m_loops;
 }

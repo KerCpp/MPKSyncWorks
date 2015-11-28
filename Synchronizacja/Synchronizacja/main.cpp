@@ -11,10 +11,10 @@ int main(void)
 {
 	//doadac interfejs - zapisywanie i korzystanie ze starych danych
 	std::string file;
-	std::cout << "Podaj adres pliku z danymi: ";
+	std::cout << "Podaj nazwe danych wejsciowych: ";
 	//std::cin >> file;
-	//file = "inputdatapora0R.dat";//do testow
-	file = "testowy.dat";
+	file = "inputdatapora0R";//do testow
+	//file = "testowy";
 	std::cout << std::endl << "Wczytuje...";
 	CconnectionMatrix data(file);
 	data.period() = 15;

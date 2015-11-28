@@ -11,6 +11,7 @@ CKnotNet::CKnotNet(const CconnectionMatrix &data) : m_fin(false), m_rating(INT_M
 		if (data.getStopInfo(i).isItKnot())
 			m_CStopList.push_back(data.getStopInfo(i));
 	}
+	m_loops = data.retLoops();
 }
 //destruktor
 CKnotNet::~CKnotNet(){}
@@ -25,14 +26,14 @@ const int CKnotNet::rating() const
 	return m_rating;
 }
 //czy wszystkie warunki sa spelnione
-bool CKnotNet::isGood() const
+bool CKnotNet::isGood(int period, int delay) const
 {
 	for each (const auto &knot in m_CStopList)
 	{
-		if (!knot.isGood())
+		if (!knot.isGood(delay))
 			return false;
 	}
-	//if (!_mijanka()) return false;
+	if (!_loopsGood(period)) return false;
 	return true;
 }
 //dodanie nowych lini do grafu, zwraca czy finished
@@ -78,7 +79,7 @@ bool CKnotNet::fill(const std::vector<int> &comb, const std::vector<int> &perm, 
 			break;
 		}
 	}
-	if (!isGood())
+	if (!isGood(data.period(), data.delay()))
 		throw int(2);
 	if (_finished())
 		_evalFunc();
@@ -257,4 +258,55 @@ void CKnotNet::_cut(std::vector<int>& perm, std::vector<int>& comb, int id) cons
 		}
 	}
 	__presort(comb, perm);
+}
+//aktywator sprawdzania mijanek
+bool CKnotNet::_loopsGood(int period) const
+{
+	for (auto &loop : m_loops)
+	{
+		if (_negTestLoop(loop, period))
+			return false;
+	}
+	return true;
+}
+bool CKnotNet::_negTestLoop(const loopLine& loop, int period) const
+{
+	int stop1=-1, stop2=-1;
+	for (auto i = 0u; i < m_CStopList.size(); i++)//wyznaczenie przystankow
+	{
+		if (m_CStopList[i].id() == loop.m_sID1)
+			stop1 = i;
+		if (m_CStopList[i].id() == loop.m_sID2)
+			stop2 = i;
+	}
+	if (stop1 == -1 || stop2 == -1)
+		return false;
+	int pos1=-1, pos2=-1;
+	const auto &TT1 = m_CStopList[stop1].setTTable();
+	const auto &TT2 = m_CStopList[stop2].setTTable();
+	for (auto i = 0u; i < TT1.size(); i++)
+	{
+		if (abs(loop.m_ctrlsum - 2 * TT1[i].m_id) == 1)
+			pos1 = i;
+	}
+	for (auto i = 0u; i < TT2.size(); i++)
+	{
+		if (abs(loop.m_ctrlsum - 2 * TT2[i].m_id) == 1)
+			pos2 = i;
+	}
+	if (pos1 == -1 || pos2 == -1) //jesli gdzies jeszcze nie wpisane
+		return false;
+	/////////////mijanka sama sobie
+	int xl, x0, xp, y;
+	x0 = TT1[pos1].m_startTime;
+	xl = modulo(x0 - loop.m_time, period);
+	xp = modulo(x0 + loop.m_time, period);
+	y = TT2[pos2].m_startTime;
+	if (xl < xp)//warunki mijanki modulo
+		if (y<=xl || y>=xp)
+			return false;
+	else
+		if (y>=xl || y<=xp)
+			return false;
+	return true;
 }

@@ -16,6 +16,7 @@ class CconnectionMatrix
 	std::vector<CStop> m_allstops;
 	std::vector<CidParser> m_idLineTable;
 	std::vector<CidParser> m_idStopTable;
+	std::vector<loopLine> m_loops;
 	int m_period = 30;
 	int m_delay = 0;
 public:
@@ -35,6 +36,7 @@ public:
 	int delay() const;
 	int& period();
 	int& delay();
+	std::vector<loopLine> retLoops() const;
 private:
 	void _fillGraph();
 	void _fillStops();
@@ -47,5 +49,7 @@ private:
 	bool _stopNotExist(const std::string&, int*);
 	void _addStop(const std::string&, bool=false);
 	int _lineParser(std::string) const;
+	void _updateLoops();
+	void _ulHelp(loopLine&,int);
 };
 

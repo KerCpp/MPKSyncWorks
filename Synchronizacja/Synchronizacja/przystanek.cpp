@@ -88,12 +88,36 @@ const std::vector<ls>& CStop::setTTable() const
 	return m_tTable;
 }
 //sprawdza czy prawidlowo wypelniony
-bool CStop::isGood() const
+bool CStop::isGood(int delay) const
 {
-	for (auto i = 0u; i < m_tTable.size() - 1; i++)
+	int eT1mem=0, errType1count = 0;
+	bool errType2log = false;
+	for (auto i = 0u; i < m_tTable.size() - 1; i++)//nie pokrywanie siê odjazdów
 	{
-		if (m_tTable[i].m_startTime == m_tTable[i+1].m_startTime)//jesli przyjazd w tym samym czasie
-			return false;
+		if (m_tTable[i].m_startTime == m_tTable[i + 1].m_startTime && m_tTable[i].m_startTime != -1)
+			errType1count++;
+		else
+		{
+			eT1mem = (eT1mem>errType1count) ? eT1mem : errType1count;
+			errType1count = 0;
+		}
+	}
+	if (eT1mem >= m_multiStop)
+		return false;
+	if (m_tTable.size()>1)//warunek odchylki
+	{
+		Ccombinations comb(numOfLines(), 15, 0);
+		for (auto &c : comb.retComb())
+		{
+			bool logic = true;
+			for (auto i = 0u; i < c.size(); i++)
+			{
+				if (abs(m_tTable[i].m_startTime - c[i]) <= delay)
+					logic = false;
+			}
+			if (logic)
+				errType2log = true;
+		}
 	}
 	return true;
 	////////////////////warunki rozkladu , odchylki

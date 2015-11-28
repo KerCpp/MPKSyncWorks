@@ -3,6 +3,19 @@
 #include <set>
 #include <iostream>
 #include <string>
+#include <iterator>
+
+
+//mijanka
+struct loopLine
+{
+	int m_LId=0;//ID Lini
+	int m_sID1=0;//przystanek wjazdowy z jednej strony
+	int m_sID2=0;//z drugiej
+	int m_time=0;//czas przejazdu przez mijankê
+	int m_ctrlsum=0;//suma kontrolna do sprawdzania czy zgodnosc id lini
+	int m_timeLag=0;//roznica czasu wynikla z przesuniecia na wezly 
+};
 
 //klasa do porownan w zbiorze
 struct vecComp

@@ -8,7 +8,8 @@ class CStop
 	bool m_knot = false;
 	bool m_terminus = false;
 	std::vector<int> m_lines;
-	std::vector<ls> m_tTable;//info co ile minut a nie w ktorej minucie
+	std::vector<ls> m_tTable;
+	int m_multiStop = 1;
 public:
 	CStop(): m_lines(), m_tTable(){}
 	CStop(int Id, bool terminus) : CStop(){ m_id = Id; m_terminus = terminus; }
@@ -24,7 +25,7 @@ public:
 	int rating() const;
 	std::vector<ls>& setTTable();
 	const std::vector<ls>& setTTable() const;
-	bool isGood() const;//dopisac costam
+	bool isGood(int) const;//dopisac costam
 	void addLine(int id);
 	const std::vector<int>& lineList() const;
 private:
